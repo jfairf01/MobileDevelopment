@@ -56,4 +56,12 @@ The app will allow users to create groups of their housemates. Features include:
 
 We will be using ReactNative, and Sara and Johnny have never used it. We imagine there will be a bit of a learning curve, but are excited to learn and use a new technology. Claudia has developed in React before and is familiar with the technology so hopefully will be able to provide some knowledge about the structure of React. Another concern some of us have is simply learning all of the consideration we will have to make for mobile development that we do not have to navigate with other platforms.  
 
+## Entry 2: Tuesday, October 3rd, 2017
+
+### A preliminary list of third-party APIs we will need
+
+* [GroupMe](https://dev.groupme.com/) - for a housemate group chat
+* [Google Calendar](https://developers.google.com/google-apps/calendar/) – for shared events
+* [Venmo](https://developer.venmo.com/) – to settle shared bills
+* [Material Design Kit](http://www.xinthink.com/react-native-material-kit/) – if we want to use material design
 
