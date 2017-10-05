@@ -59,8 +59,8 @@ We will be using ReactNative, and Sara and Johnny have never used it. We imagine
 ## Entry 2: Tuesday, October 3rd, 2017
 
 ### A wireframe of the app: 
-* [Wireframe] (http://9md4kk.axshare.com/#g=1&p=open)
-* [Architecture] (http://garanw.axshare.com/#g=1)
+* [Wireframe](http://9md4kk.axshare.com/#g=1&p=open)
+* [Architecture](http://garanw.axshare.com/#g=1)
 
 
 ### A preliminary list of third-party APIs we will need
