@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "21090828640",
+    "firebase_url": "https://housemom-a5d70.firebaseio.com",
+    "project_id": "housemom-a5d70",
+    "storage_bucket": "housemom-a5d70.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:21090828640:android:574d731d1e485fb3",
+        "android_client_info": {
+          "package_name": "com.housemom"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "21090828640-096lht139h5kt4ldpn12m3dcpcuqbe5s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBe-Ikea0bPe8yWyRn4daQ0bZojraLAbFc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -34,7 +34,7 @@ class Dashboard extends Component {
             <View style={styles.resizeModeControl}>
               <TouchableOpacity onPress={()=>{this.props.navigator.pop()}} style={styles.button}>
                 <Text style={styles.buttonText}>
-                  Logout
+                  Go Back
                 </Text>
               </TouchableOpacity>
             </View>
