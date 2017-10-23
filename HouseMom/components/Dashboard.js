@@ -10,12 +10,18 @@ import {
   Text,
   View,
   TouchableOpacity,
+  CheckBox,
 } from 'react-native';
+
+import Chore from './Chore.js'
 
 class Dashboard extends Component {
   constructor(props){
     super(props);
     this.navigate = this.navigate.bind(this);
+    this.state = {
+      choreComplete: false
+    }
   }
 
   navigate(route){
@@ -27,9 +33,14 @@ class Dashboard extends Component {
   render() {
     return(
       <View style={styles.container}>
-        <Text>
-          This is the dashboard wooooooo
-        </Text>
+        <View style={styles.choreList}>
+          <Chore housemate="Johnny" title="Sweeping" deadline="Tuesday"> //use flatList or sectionList in the future?
+          </Chore>
+          <Chore housemate="Claudia" title="Bathroom" deadline="Thursday">
+          </Chore>
+          <Chore housemate="Sara" title="Kitchen" deadline="Thursday">
+          </Chore>
+        </View>
         <View style={styles.controls}>
             <View style={styles.resizeModeControl}>
               <TouchableOpacity onPress={()=>{this.props.navigator.pop()}} style={styles.button}>
@@ -40,7 +51,6 @@ class Dashboard extends Component {
             </View>
         </View>
       </View>
-
       );
   }
 }
@@ -48,13 +58,17 @@ class Dashboard extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     backgroundColor: 'white',
   },
+  choreList: {
+    marginBottom: 50,
+  },
   button: {
-    marginRight:40,
-    marginLeft:40,
+    marginRight:20,
+    marginLeft:20,
     paddingTop:10,
     paddingBottom:10,
     backgroundColor:'#68a0cf',
