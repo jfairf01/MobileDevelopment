@@ -85,9 +85,15 @@ class Chore extends Component {
     //insert call to api that updates this bool in the db
   }
 
+  nudge() {
+    alert("nudged!");
+    //insert api call to add nudge to user
+    //disable nidge button for a minute or something?
+  }
+
   render() {
 
-    nudgeButton = <TouchableOpacity onPress={()=>{alert("nudged!")}} style={styles.button}>
+    nudgeButton = <TouchableOpacity onPress={()=>{this.nudge()}} style={styles.button}>
                 <Text style={styles.buttonText}>
                   Nudge
                 </Text>
