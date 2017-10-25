@@ -51,14 +51,29 @@ getUsersChores() {
       });
   }
 
+// getHousemates() {
+//     return fetch('https://housemom-api.herokuapp.com/houses')
+//       .then((response) => response.json())
+//       .then((responseJson) => {
+//         var myhouse = responseJson.filter(function(house){
+//           return (house["House Name"] == "Burrow"); //change this to be dynamic
+//         });
+//         var housemates = myhouse[0]["Inhabitants"];
+//         this.setState({users: housemates});
+//       })
+//       .catch((error) => {
+//         console.error(error);
+//       });
+//   }
+
 getHousemates() {
-    return fetch('https://housemom-api.herokuapp.com/houses')
+    return fetch('https://housemom-api.herokuapp.com/users')
       .then((response) => response.json())
       .then((responseJson) => {
-        var myhouse = responseJson.filter(function(house){
-          return (house["House Name"] == "Burrow"); //change this to be dynamic
+        var housemates = responseJson.filter(function(user){
+          return (user["Houses"][0] == "Burrow"); //change this to be dynamic
         });
-        var housemates = myhouse[0]["Inhabitants"];
+        //var housemates = myhouse[0]["Inhabitants"];
         this.setState({users: housemates});
       })
       .catch((error) => {
