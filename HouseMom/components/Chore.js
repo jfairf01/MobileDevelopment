@@ -10,14 +10,46 @@ import {
   Text,
   View,
   TouchableOpacity,
+  TouchableHighlight,
+  Modal,
+  FlatList,
   Switch, //change to checkbox if you can update react-native to .49
 } from 'react-native';
 
 class Chore extends Component {
   constructor(props){
     super(props);
-    this.state = {checked: false};
+    this.navigate = this.navigate.bind(this);
+    this.state = {
+      checked: false,
+      modalVisible: false,
+      chores: []
+    };
   }
+
+  componentWillMount(){
+    console.log("getting chores");
+    this.getChores();
+  }
+
+  navigate(route){
+    this.state.volume = 0;
+    this.props.navigator.push({
+      name: 'chorepicker'
+    })
+  }
+
+  getChores() {
+    return fetch('https://housemom-api.herokuapp.com/chores')
+      .then((response) => response.json())
+      .then((responseJson) => {
+        this.setState({chores: responseJson});
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
 
   render() {
 
@@ -27,7 +59,7 @@ class Chore extends Component {
                 </Text>
               </TouchableOpacity>;
 
-    changeButton = <TouchableOpacity onPress={()=>{alert("editing!")}} style={styles.button}>
+    changeButton = <TouchableOpacity onPress={() => {this.setState({modalVisible: true})}} style={styles.button}>
                 <Text style={styles.buttonText}>
                   Change
                 </Text>
@@ -37,6 +69,30 @@ class Chore extends Component {
 
     return(
       <View style={styles.choreRow}>
+        <Modal
+          animationType="slide"
+          transparent={false}
+          visible={this.state.modalVisible}
+          onRequestClose={() => {alert("Modal has been closed.")}}
+          >
+         <View style={{marginTop: 22}}>
+          <View>
+            <FlatList style={styles.choreList}
+              keyExtractor={(item, index) => index}
+              data={this.state.chores}
+              renderItem={({item}) =>  <Text style={styles.choreItem}>{item}</Text>}
+            ></FlatList>
+
+            <TouchableOpacity onPress={() => {this.setState({modalVisible: false})}} style={styles.button}>
+                <Text style={styles.buttonText}>
+                  Doner
+                </Text>
+              </TouchableOpacity>
+
+          </View>
+         </View>
+        </Modal>
+
           <Switch onValueChange={(value)=>this.setState({checked: value})} value={this.state.checked} />
           <Text style={styles.choreName}>
             {this.props.housemate}
@@ -75,6 +131,11 @@ const styles = StyleSheet.create({
   },
   choreDeadline: {
     fontSize: 15,
+  },
+  choreItem: {
+    fontWeight: 'bold',
+    fontSize: 25,
+    padding: 10,
   },
   button: {
     marginRight:20,

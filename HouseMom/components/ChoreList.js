@@ -1,3 +1,5 @@
+//NOT BEING USED
+
 import React, {
   Component
 } from 'react';
@@ -40,7 +42,7 @@ class ChoreList extends Component {
       });
   }
 
-  
+
 
   render() {
     return(
