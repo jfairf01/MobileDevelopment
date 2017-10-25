@@ -14,6 +14,7 @@ import {
   Modal,
   FlatList,
   Picker,
+  TextInput,
   Switch, //change to checkbox if you can update react-native to .49
 } from 'react-native';
 
@@ -25,7 +26,7 @@ class Chore extends Component {
       checked: false,
       modalVisible: false,
       chores: [],
-      selectedChore: chores[0]
+      selectedChore: ''
     };
   }
 
@@ -42,10 +43,11 @@ class Chore extends Component {
   }
 
   getChores() {
+    console.log("chores get");
     return fetch('https://housemom-api.herokuapp.com/chores')
       .then((response) => response.json())
       .then((responseJson) => {
-        this.setState({chores: responseJson});
+        this.setState({chores: responseJson, selectedChore: responseJson[0]});
       })
       .catch((error) => {
         console.error(error);
@@ -59,6 +61,19 @@ class Chore extends Component {
       .then((response) => {console.log(response);})
       .then(() => {
         //update the dash ??
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
+  addChore(input) {
+    var url = 'https://housemom-api.herokuapp.com/new_chore/' + input;
+    console.log("url:" + url);
+    return fetch(url)
+      .then((response) => {console.log(response);})
+      .then(() => {
+        this.getChores();
       })
       .catch((error) => {
         console.error(error);
@@ -91,7 +106,7 @@ class Chore extends Component {
           >
          <View style={{marginTop: 22}}>
           <View>
-
+            <Text>Choose from the list:</Text>
             <Picker
                    mode="dialog"
                    prompt="Pick a chore"
@@ -101,8 +116,25 @@ class Chore extends Component {
                      return (<Picker.Item label={item} value={item} key={index}/>) 
                                     })}
             </Picker>
+            <TouchableOpacity onPress={() => {this.setChore()}} style={styles.button}>
+                <Text style={styles.buttonText}>
+                  Assign
+                </Text>
+              </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => {this.setChore(); this.setState({modalVisible: false});}} style={styles.button}>
+            <Text>Or add a chore:</Text>
+            <TextInput
+              style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+              onChangeText={(text) => this.setState({text})}
+              value={this.state.text}
+            ></TextInput>
+            <TouchableOpacity onPress={() => {this.addChore(this.state.text)}} style={styles.button}>
+                <Text style={styles.buttonText}>
+                  Add
+                </Text>
+              </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => {this.setState({modalVisible: false});}} style={styles.button}>
                 <Text style={styles.buttonText}>
                   Done
                 </Text>
