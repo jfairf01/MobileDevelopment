@@ -18,10 +18,11 @@ import {
   Switch, //change to checkbox if you can update react-native to .49
 } from 'react-native';
 
+
+//need to update this to get 'checked' value from db
 class Chore extends Component {
   constructor(props){
     super(props);
-    this.navigate = this.navigate.bind(this);
     this.state = {
       title: this.props.title,
       checked: false,
@@ -34,13 +35,6 @@ class Chore extends Component {
   componentWillMount(){
     console.log("getting chores");
     this.getChores();
-  }
-
-  navigate(route){
-    this.state.volume = 0;
-    this.props.navigator.push({
-      name: 'chorepicker'
-    })
   }
 
   getChores() {

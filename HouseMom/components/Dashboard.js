@@ -16,7 +16,6 @@ import {
 
 import Chore from './Chore.js';
 import ChoreList from './ChoreList.js';
-import ChorePicker from './ChorePicker.js'
 
 class Dashboard extends Component {
   constructor(props){
@@ -112,7 +111,6 @@ getHousemates() {
     else{
     return(
       <View style={styles.container}>
-        <ChorePicker modalVisible={this.state.modalVisible}></ChorePicker>
         <Text style={styles.headerText}>Chore Chart</Text>
         <View>
           {choreList}
