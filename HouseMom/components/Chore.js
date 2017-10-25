@@ -13,6 +13,7 @@ import {
   TouchableHighlight,
   Modal,
   FlatList,
+  Picker,
   Switch, //change to checkbox if you can update react-native to .49
 } from 'react-native';
 
@@ -23,7 +24,8 @@ class Chore extends Component {
     this.state = {
       checked: false,
       modalVisible: false,
-      chores: []
+      chores: [],
+      selectedChore: chores[0]
     };
   }
 
@@ -50,6 +52,18 @@ class Chore extends Component {
       });
   }
 
+  setChore() {
+    var url = 'https://housemom-api.herokuapp.com/new_user_chore/' + this.state.selectedChore + "/" + this.props.username;
+    console.log("url:" + url);
+    return fetch(url)
+      .then((response) => {console.log(response);})
+      .then(() => {
+        //update the dash ??
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
 
   render() {
 
@@ -77,15 +91,20 @@ class Chore extends Component {
           >
          <View style={{marginTop: 22}}>
           <View>
-            <FlatList style={styles.choreList}
-              keyExtractor={(item, index) => index}
-              data={this.state.chores}
-              renderItem={({item}) =>  <Text style={styles.choreItem}>{item}</Text>}
-            ></FlatList>
 
-            <TouchableOpacity onPress={() => {this.setState({modalVisible: false})}} style={styles.button}>
+            <Picker
+                   mode="dialog"
+                   prompt="Pick a chore"
+                   selectedValue={this.state.selectedChore}
+                   onValueChange={(chore)=>{console.log("picked chore: " + chore); this.setState({selectedChore: chore})}}>
+                   {this.state.chores.map((item, index) => {
+                     return (<Picker.Item label={item} value={item} key={index}/>) 
+                                    })}
+            </Picker>
+
+            <TouchableOpacity onPress={() => {this.setChore(); this.setState({modalVisible: false});}} style={styles.button}>
                 <Text style={styles.buttonText}>
-                  Doner
+                  Done
                 </Text>
               </TouchableOpacity>
 

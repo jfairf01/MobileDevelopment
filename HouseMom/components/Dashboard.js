@@ -51,21 +51,6 @@ getUsersChores() {
       });
   }
 
-// getHousemates() {
-//     return fetch('https://housemom-api.herokuapp.com/houses')
-//       .then((response) => response.json())
-//       .then((responseJson) => {
-//         var myhouse = responseJson.filter(function(house){
-//           return (house["House Name"] == "Burrow"); //change this to be dynamic
-//         });
-//         var housemates = myhouse[0]["Inhabitants"];
-//         this.setState({users: housemates});
-//       })
-//       .catch((error) => {
-//         console.error(error);
-//       });
-//   }
-
 getHousemates() {
     return fetch('https://housemom-api.herokuapp.com/users')
       .then((response) => response.json())
@@ -97,7 +82,7 @@ getHousemates() {
                     <FlatList style={styles.choreList}
                       keyExtractor={(item, index) => index}
                       data={this.state.users}
-                      renderItem={({item}) => <Chore housemate={item["First Name"]} title={item["Chores"][0]} deadline="Thursday" edit={this.state.editMode} ></Chore>}
+                      renderItem={({item}) => <Chore housemate={item["First Name"]} username={item["Username"]} title={item["Chores"][0]} deadline="Thursday" edit={this.state.editMode}></Chore>}
                     ></FlatList>
                   </View>;
     } else {
@@ -110,7 +95,7 @@ getHousemates() {
                     <FlatList
                       keyExtractor={(item, index) => index}
                       data={this.state.users}
-                      renderItem={({item}) => <Chore housemate={item["First Name"]} title={item["Chores"][0]} deadline="Thursday" edit={this.state.editMode}></Chore>}
+                      renderItem={({item}) => <Chore housemate={item["First Name"]} username={item["Username"]} title={item["Chores"][0]} deadline="Thursday" edit={this.state.editMode}></Chore>}
                     ></FlatList>
                   </View>;
     }
@@ -131,6 +116,11 @@ getHousemates() {
             <TouchableOpacity onPress={()=>{this.setState({editMode: true})}} style={styles.button}>
                 <Text style={styles.buttonText}>
                   Edit
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={()=>{this.getHousemates()}} style={styles.button}>
+                <Text style={styles.buttonText}>
+                  Refresh
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={()=>{this.props.navigator.pop()}} style={styles.button}>
