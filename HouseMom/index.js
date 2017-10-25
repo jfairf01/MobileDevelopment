@@ -15,6 +15,7 @@ import { Navigator } from 'react-native-deprecated-custom-components'
 import Home from './components/Home'
 import Dashboard from './components/Dashboard'
 
+
 class HouseMom extends Component {
 
   constructor() {
@@ -30,6 +31,7 @@ class HouseMom extends Component {
         return (<Home navigator={navigator} />);
       case 'dashboard':
         return (<Dashboard navigator={navigator} />);
+
     }
   }
 
