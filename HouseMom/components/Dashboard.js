@@ -19,10 +19,22 @@ class Dashboard extends Component {
   constructor(props){
     super(props);
     this.navigate = this.navigate.bind(this);
+    //this.getUsersChores=this.getUsersChores.bind(this);
     this.state = {
-      choreComplete: false
-    }
+      usersChores: [],
+      userA: {}
+    };
+    this.getUsersChores();
   }
+
+  // componentWillMount(){
+  //   console.log("heyyy");
+  //   this.getUsersChores();
+  // }
+
+  // componentDidMount(){
+  //   this.getUsersChores();
+  // }
 
   navigate(route){
     this.props.navigator.push({
@@ -30,13 +42,33 @@ class Dashboard extends Component {
     })
   }
 
+getUsersChores() {
+  //console.log('getting chores');
+    return fetch('https://housemom-api.herokuapp.com/users')
+      .then((response) => response.json())
+      .then((responseJson) => {
+        this.setState({usersChores: responseJson.filter(function(user){
+          return (user["Chores"].length > 0);
+        }),
+        userA: responseJson[0]})})
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
   render() {
+    //console.log(this.state.usersChores);
+    //console.log(this.state.userA);
+    // if(this.state.usersChores.length == 0){
+    //   return(<View><Text> test </Text></View>);
+    // }
+    // else{
     return(
       <View style={styles.container}>
         <View style={styles.choreList}>
-          <Chore housemate="Johnny" title="Sweeping" deadline="Tuesday"> //use flatList or sectionList in the future?
+          <Chore housemate={this.state.userA["First Name"]} title="Sweeping" deadline="Tuesday"> //use flatList or sectionList in the future?
           </Chore>
-          <Chore housemate="Claudia" title="Bathroom" deadline="Thursday">
+          <Chore housemate="Johnny" title="Bathroom" deadline="Thursday">
           </Chore>
           <Chore housemate="Sara" title="Kitchen" deadline="Thursday">
           </Chore>
@@ -53,6 +85,7 @@ class Dashboard extends Component {
       </View>
       );
   }
+//}
 }
 
 const styles = StyleSheet.create({
