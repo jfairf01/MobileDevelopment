@@ -20,6 +20,21 @@ class Chore extends Component {
   }
 
   render() {
+
+    nudgeButton = <TouchableOpacity onPress={()=>{alert("nudged!")}} style={styles.button}>
+                <Text style={styles.buttonText}>
+                  Nudge
+                </Text>
+              </TouchableOpacity>;
+
+    changeButton = <TouchableOpacity onPress={()=>{alert("editing!")}} style={styles.button}>
+                <Text style={styles.buttonText}>
+                  Change
+                </Text>
+              </TouchableOpacity>;
+
+    sideButton = this.props.edit ? changeButton : nudgeButton;
+
     return(
       <View style={styles.choreRow}>
           <Switch onValueChange={(value)=>this.setState({checked: value})} value={this.state.checked} />
@@ -30,11 +45,7 @@ class Chore extends Component {
             <Text style={styles.choreTitle}>{this.props.title}</Text>
             <Text style={styles.choreDeadline}>{this.props.deadline}</Text>
           </View>
-          <TouchableOpacity onPress={()=>{alert("nudged!")}} style={styles.button}>
-                <Text style={styles.buttonText}>
-                  Nudge
-                </Text>
-              </TouchableOpacity>
+          {sideButton}
     </View>
     );
   }

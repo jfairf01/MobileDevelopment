@@ -11,30 +11,27 @@ import {
   View,
   TouchableOpacity,
   CheckBox,
+  FlatList
 } from 'react-native';
 
-import Chore from './Chore.js'
+import Chore from './Chore.js';
+import ChoreList from './ChoreList.js';
 
 class Dashboard extends Component {
   constructor(props){
     super(props);
     this.navigate = this.navigate.bind(this);
-    //this.getUsersChores=this.getUsersChores.bind(this);
     this.state = {
-      usersChores: [],
-      userA: {}
+      editMode: false,
+      users: []
     };
-    this.getUsersChores();
+    //this.getUsersChores();
   }
 
-  // componentWillMount(){
-  //   console.log("heyyy");
-  //   this.getUsersChores();
-  // }
-
-  // componentDidMount(){
-  //   this.getUsersChores();
-  // }
+  componentWillMount(){
+    console.log("heyyy");
+    this.getUsersChores();
+  }
 
   navigate(route){
     this.props.navigator.push({
@@ -43,38 +40,67 @@ class Dashboard extends Component {
   }
 
 getUsersChores() {
-  //console.log('getting chores');
     return fetch('https://housemom-api.herokuapp.com/users')
       .then((response) => response.json())
       .then((responseJson) => {
-        this.setState({usersChores: responseJson.filter(function(user){
-          return (user["Chores"].length > 0);
-        }),
-        userA: responseJson[0]})})
+        this.setState({users: responseJson})})
       .catch((error) => {
         console.error(error);
       });
   }
 
+
+  // .filter(function(user){
+  //         return (user["Chores"].length > 0);
+  //       })
+
   render() {
-    //console.log(this.state.usersChores);
-    //console.log(this.state.userA);
-    // if(this.state.usersChores.length == 0){
-    //   return(<View><Text> test </Text></View>);
-    // }
-    // else{
+    console.log(this.state.users);
+
+    const editMode = this.state.editMode;
+
+    let choreList = null;
+
+    if (editMode) {
+      choreList = <View>
+                    <FlatList style={styles.choreList}
+                      keyExtractor={(item, index) => index}
+                      data={this.state.users}
+                      renderItem={({item}) => <Chore housemate={item["First Name"]} title={item["Chores"][0]} deadline="Thursday" edit={this.state.editMode} ></Chore>}
+                    ></FlatList>
+                  </View>;
+    } else {
+
+      const usersWithChores = this.state.users.filter(function(user){
+          return (user["Chores"].length > 0);
+        });
+
+      choreList = <View>
+                    <FlatList
+                      keyExtractor={(item, index) => index}
+                      data={usersWithChores}
+                      renderItem={({item}) => <Chore housemate={item["First Name"]} title={item["Chores"][0]} deadline="Thursday" edit={this.state.editMode}></Chore>}
+                    ></FlatList>
+                  </View>;
+    }
+
+    if(this.state.users.length == 0){
+      return(<View><Text> Loading... </Text></View>);
+    }
+    else{
     return(
       <View style={styles.container}>
-        <View style={styles.choreList}>
-          <Chore housemate={this.state.userA["First Name"]} title="Sweeping" deadline="Tuesday"> //use flatList or sectionList in the future?
-          </Chore>
-          <Chore housemate="Johnny" title="Bathroom" deadline="Thursday">
-          </Chore>
-          <Chore housemate="Sara" title="Kitchen" deadline="Thursday">
-          </Chore>
+        <Text style={styles.headerText}>Chore Chart</Text>
+        <View>
+          {choreList}
         </View>
         <View style={styles.controls}>
             <View style={styles.resizeModeControl}>
+            <TouchableOpacity onPress={()=>{this.setState({editMode: true})}} style={styles.button}>
+                <Text style={styles.buttonText}>
+                  Edit
+                </Text>
+              </TouchableOpacity>
               <TouchableOpacity onPress={()=>{this.props.navigator.pop()}} style={styles.button}>
                 <Text style={styles.buttonText}>
                   Logout
@@ -84,8 +110,8 @@ getUsersChores() {
         </View>
       </View>
       );
+    }
   }
-//}
 }
 
 const styles = StyleSheet.create({
@@ -97,7 +123,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   choreList: {
-    marginBottom: 50,
+    paddingBottom: 50,
+    height: 480,
+    flexGrow: 0
+  },
+  headerText: {
+    fontSize: 40,
+    color: 'black',
+    marginTop: 20
   },
   button: {
     marginRight:20,
