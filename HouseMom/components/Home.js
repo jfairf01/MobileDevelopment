@@ -10,9 +10,23 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Button,
+  TextInput,
+  Alert
 } from 'react-native';
 
+import { AccessToken, LoginManager } from 'react-native-fbsdk';
+
 import Video from 'react-native-video';
+
+import RNFirebase from 'react-native-firebase';
+
+const configurationOptions = {
+  debug: true
+};
+
+const firebase = RNFirebase.initializeApp(configurationOptions);
+
 
 class Home extends Component {
 
@@ -22,6 +36,16 @@ class Home extends Component {
     this.onProgress = this.onProgress.bind(this);
     this.onBuffer = this.onBuffer.bind(this);
     this.navigate = this.navigate.bind(this);
+    this.LogIn = this.LogIn.bind(this);
+    this.LogOut = this.LogOut.bind(this);
+    this.SignUp = this.SignUp.bind(this);
+    this.unsubscribe = null;
+    this.state={
+      user:null,
+      email: "Email",
+      password:"Password",
+      showPword: false
+    }
   }
   state = {
     rate: 1,
@@ -64,7 +88,74 @@ class Home extends Component {
     })
   }
 
-  renderCustomSkin() {
+  componentDidMount() {
+    this.unsubscribe = firebase.auth().onAuthStateChanged((user) => {
+      if(user){
+        console.log('signed in', user);
+         this.setState(previousState => {
+                return { user: user,
+                  email: user.email};
+              });
+        this.navigate('dashboard')
+      }
+
+      else
+        console.log('not')
+    });    
+}
+  componentWillUnmount() {
+    if (this.unsubscribe) {
+      this.unsubscribe();
+    }
+  }
+
+  SignUp(){
+    firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
+      .then((user) => {
+        console.log('user created', user)
+       // this.navigate('dashboard')
+      })
+      .catch((err) => {
+        Alert.alert("Sorry, your username or password is wrong.")
+        console.error(err);
+      });
+  }
+  LogIn(){
+    firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
+    .then((user) => {
+        console.log('AN LOGGED IN', user)
+        //this.navigate('dashboard')
+      })
+      .catch((err) => {
+        Alert.alert("Sorry, your username or password is wrong.")
+        console.error(err);
+    });
+  }
+  LogOut(){
+     firebase.auth().signOut()
+    .then(() => {
+       this.setState(previousState => {
+        return { user: null};
+      });
+      console.log('User signed out successfully');
+    })
+    .catch();
+  }
+
+    renderCustomSkin() {
+      if(this.state.user != null){
+          return(
+        <View style={styles.header}>
+          <Text style={styles.loggedIn}> You are logged in as {this.state.email}</Text>
+          <View style={{height:200}}>
+            <TouchableOpacity style={styles.logOut} onPress={this.LogOut}>
+              <Text style={{marginLeft: 20, marginRight: 20, color: 'white'}}>
+                Log Out
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>)
+      }
     return (
       <View style={styles.container}>
         {/*<View style={styles.fullScreen} onPress={() => {this.setState({paused: !this.state.paused})}}>
@@ -82,21 +173,34 @@ class Home extends Component {
             repeat={true}
           />
         </View> */}
-        <View style={styles.header}>
+
+         <View style={styles.header}>
           <Text style={{marginLeft: 20, marginRight: 20, fontSize: 30, fontFamily: 'courier'}}>
             HouseMom
           </Text>
         </View>
         <View style={styles.logIn}>
-          <TouchableOpacity style={styles.muteButton} onPress={() => this.navigate('dashboard')}>
+        <TextInput
+          style={{height: 40, width: 200,borderColor: 'gray', borderWidth: 1, margin:10}}
+          onChangeText={(email) => this.setState({email})}
+          value={this.state.email}
+        />
+        <TextInput   style={{height: 40, width: 200,borderColor: 'gray', borderWidth: 1, margin:10}}
+          onChangeText={(password) => this.setState({password})}
+          value={this.state.password}
+        />
+          <TouchableOpacity style={styles.authButtons} onPress={this.LogIn}>
             <Text style={{marginLeft: 20, marginRight: 20, color: 'white'}}>
-              Login with Facebook
+              Login with Email
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.authButtons} onPress={this.SignUp}>
+            <Text style={{marginLeft: 20, marginRight: 20, color: 'white'}}>
+              Sign Up with Email
             </Text>
           </TouchableOpacity>
         </View>
-
-
-        <View style={styles.controls}>
+       {/*} <View style={styles.controls}>
           <View style={styles.generalControls}>
             <View style={styles.resizeModeControl}>
               <TouchableOpacity onPress={()=>{this.muteVolumeControl()}} style={styles.muteButton}>
@@ -113,14 +217,20 @@ class Home extends Component {
               </TouchableOpacity>
             </View>
           </View>
-        </View>
+        </View> */}
       </View>
+
+
+
+
     );
   }
 
+
+
   render() {
     return this.renderCustomSkin();
-  }
+   }
 }
 
 const styles = StyleSheet.create({
@@ -188,6 +298,33 @@ const styles = StyleSheet.create({
     borderRadius:10,
     borderWidth: 1,
     borderColor: '#fff'
+  },
+  authButtons: {
+    marginRight:40,
+    marginLeft:40,
+    marginTop:20,
+    paddingTop:10,
+    paddingBottom:10,
+    backgroundColor:'#68a0cf',
+    borderRadius:10,
+    borderWidth: 1,
+    borderColor: '#fff'
+  },
+  logOut: {
+    top:50,
+    marginRight:40,
+    marginLeft:40,
+    marginTop:20,
+    paddingTop:10,
+    paddingBottom:10,
+    backgroundColor:'#68a0cf',
+    borderRadius:10,
+    borderWidth: 1,
+    borderColor: '#fff'
+  },
+  loggedIn:{
+    top:50,
+    textAlign: 'center',
   }
 });
 

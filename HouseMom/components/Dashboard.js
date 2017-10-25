@@ -132,7 +132,7 @@ getHousemates() {
               </TouchableOpacity>
               <TouchableOpacity onPress={()=>{this.props.navigator.pop()}} style={styles.button}>
                 <Text style={styles.buttonText}>
-                  Logout
+                  Go Back
                 </Text>
               </TouchableOpacity>
             </View>
