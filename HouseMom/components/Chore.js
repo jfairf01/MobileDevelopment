@@ -80,6 +80,11 @@ class Chore extends Component {
       });
   }
 
+  choreCompleted(checked) {
+    this.setState({checked: checked});
+    //insert call to api that updates this bool in the db
+  }
+
   render() {
 
     nudgeButton = <TouchableOpacity onPress={()=>{alert("nudged!")}} style={styles.button}>
@@ -144,7 +149,7 @@ class Chore extends Component {
          </View>
         </Modal>
 
-          <Switch onValueChange={(value)=>this.setState({checked: value})} value={this.state.checked} />
+          <Switch onValueChange={(value)=>this.choreCompleted(value)} value={this.state.checked} />
           <Text style={styles.choreName}>
             {this.props.housemate}
           </Text>
