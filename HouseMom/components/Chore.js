@@ -4,6 +4,7 @@ import React, {
 
 import {
   AlertIOS, //unneeded?
+  Alert,
   AppRegistry,
   Platform,
   StyleSheet,
@@ -39,7 +40,7 @@ class Chore extends Component {
   navigate(route){
     this.state.volume = 0;
     this.props.navigator.push({
-      name: 'chorepicker'
+      name: 'dashboard'
     })
   }
 
@@ -57,12 +58,14 @@ class Chore extends Component {
 
   setChore() {
     this.setState({title: this.state.selectedChore});
-
+    console.log(this.props);
     var url = 'https://housemom-api.herokuapp.com/new_user_chore/' + this.state.selectedChore + "/" + this.props.username;
     console.log("url:" + url);
     return fetch(url)
       .then((response) => {console.log(response);})
       .then(() => {
+        this.props.reload();
+        this.navigate('dashboard');
         //update the dash ??
       })
       .catch((error) => {
@@ -97,9 +100,17 @@ class Chore extends Component {
   }
 
   nudge() {
-    alert("nudged!");
-    //insert api call to add nudge to user
-    //disable nidge button for a minute or something?
+    console.log(this.state);
+    console.log(this.props);
+    var url = 'https://housemom-api.herokuapp.com/nudge/' + this.state.title +"/" + this.props.username;
+    console.log("url:" + url);
+    return fetch(url)
+      .then((response) => {
+        console.log(response);
+        Alert.alert("You nudged " + this.props.housemate + "!")})
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
   render() {
@@ -128,11 +139,12 @@ class Chore extends Component {
           >
          <View style={{marginTop: 22}}>
           <View>
+            <Text> Assign a chore to {this.props.housemate}. Her current chore is {this.props.title} </Text>
             <Text>Choose from the list:</Text>
             <Picker
                    mode="dialog"
                    prompt="Pick a chore"
-                   selectedValue={this.state.selectedChore}
+                   selectedValue={this.props.selectedChore}
                    onValueChange={(chore)=>{console.log("picked chore: " + chore); this.setState({selectedChore: chore})}}>
                    {this.state.chores.map((item, index) => {
                      return (<Picker.Item label={item} value={item} key={index}/>) 

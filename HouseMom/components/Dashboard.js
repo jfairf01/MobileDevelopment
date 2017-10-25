@@ -16,7 +16,7 @@ import {
 
 import Chore from './Chore.js';
 import ChoreList from './ChoreList.js';
-import ChorePicker from './ChorePicker.js'
+//import ChorePicker from './ChorePicker.js'
 
 class Dashboard extends Component {
   constructor(props){
@@ -75,7 +75,7 @@ getHousemates() {
   //       })
 
   render() {
-    console.log(this.state.users);
+    // console.log(this.state.users);
 
     const editMode = this.state.editMode;
 
@@ -86,7 +86,7 @@ getHousemates() {
                     <FlatList style={styles.choreList}
                       keyExtractor={(item, index) => index}
                       data={this.state.users}
-                      renderItem={({item}) => <Chore housemate={item["First Name"]} username={item["Username"]} title={item["Chores"][0]} deadline="Thursday" edit={this.state.editMode}></Chore>}
+                      renderItem={({item}) => <Chore housemate={item["First Name"]} username={item["Username"]} title={item["Chores"][0]} deadline="Thursday" edit={this.state.editMode} reload={this.getHousemates.bind(this)} navigator={this.props.navigator}></Chore>}
                     ></FlatList>
                   </View>;
     } else {
@@ -99,7 +99,8 @@ getHousemates() {
                     <FlatList
                       keyExtractor={(item, index) => index}
                       data={this.state.users}
-                      renderItem={({item}) => <Chore housemate={item["First Name"]} username={item["Username"]} title={item["Chores"][0]} deadline="Thursday" edit={this.state.editMode}></Chore>}
+                      renderItem={({item}) => <Chore housemate={item["First Name"]} username={item["Username"]} title={item["Chores"][0]} deadline="Thursday" edit={this.state.editMode} reload={this.getHousemates.bind(this)} navigator={this.props.navigator}
+                      ></Chore>}
                     ></FlatList>
                   </View>;
     }
@@ -112,7 +113,7 @@ getHousemates() {
     else{
     return(
       <View style={styles.container}>
-        <ChorePicker modalVisible={this.state.modalVisible}></ChorePicker>
+       {/*} <ChorePicker modalVisible={this.state.modalVisible}></ChorePicker>*/}
         <Text style={styles.headerText}>Chore Chart</Text>
         <View>
           {choreList}
