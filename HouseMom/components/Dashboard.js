@@ -30,7 +30,7 @@ class Dashboard extends Component {
 
   componentWillMount(){
     console.log("heyyy");
-    this.getUsersChores();
+    this.getHousemates();
   }
 
   navigate(route){
@@ -49,6 +49,20 @@ getUsersChores() {
       });
   }
 
+getHousemates() {
+    return fetch('https://housemom-api.herokuapp.com/houses')
+      .then((response) => response.json())
+      .then((responseJson) => {
+        var myhouse = responseJson.filter(function(house){
+          return (house["House Name"] == "Burrow"); //change this to be dynamic
+        });
+        var housemates = myhouse[0]["Inhabitants"];
+        this.setState({users: housemates});
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
 
   // .filter(function(user){
   //         return (user["Chores"].length > 0);
@@ -78,7 +92,7 @@ getUsersChores() {
       choreList = <View>
                     <FlatList
                       keyExtractor={(item, index) => index}
-                      data={usersWithChores}
+                      data={this.state.users}
                       renderItem={({item}) => <Chore housemate={item["First Name"]} title={item["Chores"][0]} deadline="Thursday" edit={this.state.editMode}></Chore>}
                     ></FlatList>
                   </View>;

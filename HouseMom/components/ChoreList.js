@@ -40,6 +40,8 @@ class ChoreList extends Component {
       });
   }
 
+  
+
   render() {
     return(
         <View>
