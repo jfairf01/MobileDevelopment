@@ -10,12 +10,28 @@ import {
   Text,
   View,
   TouchableOpacity,
+  CheckBox,
+  FlatList
 } from 'react-native';
+
+import Chore from './Chore.js';
+import ChoreList from './ChoreList.js';
 
 class Dashboard extends Component {
   constructor(props){
     super(props);
     this.navigate = this.navigate.bind(this);
+    this.state = {
+      editMode: false,
+      users: [],
+      modalVisible: false
+    };
+    //this.getUsersChores();
+  }
+
+  componentWillMount(){
+    console.log("heyyy");
+    this.getHousemates();
   }
 
   navigate(route){
@@ -24,14 +40,93 @@ class Dashboard extends Component {
     })
   }
 
+getUsersChores() {
+    return fetch('https://housemom-api.herokuapp.com/users')
+      .then((response) => response.json())
+      .then((responseJson) => {
+        this.setState({users: responseJson})})
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
+getHousemates() {
+    return fetch('https://housemom-api.herokuapp.com/users')
+      .then((response) => response.json())
+      .then((responseJson) => {
+        var housemates = responseJson.filter(function(user){
+          return (user["Houses"][0] == "Burrow"); //change this to be dynamic
+        });
+        //var housemates = myhouse[0]["Inhabitants"];
+        this.setState({users: housemates});
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
+  toggleEdit(editing) {
+    this.setState({editMode: !editing});
+  }
+
+  // .filter(function(user){
+  //         return (user["Chores"].length > 0);
+  //       })
+
   render() {
+    console.log(this.state.users);
+
+    const editMode = this.state.editMode;
+
+    let choreList = null;
+    
+    if (editMode) {
+      choreList = <View>
+                    <FlatList style={styles.choreList}
+                      keyExtractor={(item, index) => index}
+                      data={this.state.users}
+                      renderItem={({item}) => <Chore housemate={item["First Name"]} username={item["Username"]} title={item["Chores"][0]} deadline="Thursday" edit={this.state.editMode}></Chore>}
+                    ></FlatList>
+                  </View>;
+    } else {
+
+      const usersWithChores = this.state.users.filter(function(user){
+          return (user["Chores"].length > 0);
+        });
+
+      choreList = <View>
+                    <FlatList
+                      keyExtractor={(item, index) => index}
+                      data={this.state.users}
+                      renderItem={({item}) => <Chore housemate={item["First Name"]} username={item["Username"]} title={item["Chores"][0]} deadline="Thursday" edit={this.state.editMode}></Chore>}
+                    ></FlatList>
+                  </View>;
+    }
+
+    var editButtonText = editMode ? "Done" : "Edit";
+
+    if(this.state.users.length == 0){
+      return(<View><Text> Loading... </Text></View>);
+    }
+    else{
     return(
       <View style={styles.container}>
-        <Text>
-          This is the dashboard wooooooo
-        </Text>
+        <Text style={styles.headerText}>Chore Chart</Text>
+        <View>
+          {choreList}
+        </View>
         <View style={styles.controls}>
             <View style={styles.resizeModeControl}>
+            <TouchableOpacity onPress={()=>{this.toggleEdit(editMode)}} style={styles.button}>
+                <Text style={styles.buttonText}>
+                  {editButtonText}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={()=>{this.getHousemates()}} style={styles.button}>
+                <Text style={styles.buttonText}>
+                  Refresh
+                </Text>
+              </TouchableOpacity>
               <TouchableOpacity onPress={()=>{this.props.navigator.pop()}} style={styles.button}>
                 <Text style={styles.buttonText}>
                   Logout
@@ -40,21 +135,32 @@ class Dashboard extends Component {
             </View>
         </View>
       </View>
-
       );
+    }
   }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     backgroundColor: 'white',
   },
+  choreList: {
+    paddingBottom: 50,
+    height: 480,
+    flexGrow: 0
+  },
+  headerText: {
+    fontSize: 40,
+    color: 'black',
+    marginTop: 20
+  },
   button: {
-    marginRight:40,
-    marginLeft:40,
+    marginRight:20,
+    marginLeft:20,
     paddingTop:10,
     paddingBottom:10,
     backgroundColor:'#68a0cf',
