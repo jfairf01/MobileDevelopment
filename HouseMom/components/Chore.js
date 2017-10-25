@@ -23,6 +23,7 @@ class Chore extends Component {
     super(props);
     this.navigate = this.navigate.bind(this);
     this.state = {
+      title: this.props.title,
       checked: false,
       modalVisible: false,
       chores: [],
@@ -55,6 +56,8 @@ class Chore extends Component {
   }
 
   setChore() {
+    this.setState({title: this.state.selectedChore});
+
     var url = 'https://housemom-api.herokuapp.com/new_user_chore/' + this.state.selectedChore + "/" + this.props.username;
     console.log("url:" + url);
     return fetch(url)
@@ -80,9 +83,17 @@ class Chore extends Component {
       });
   }
 
+//is there a way to test this? (yes once you can nudge)
   choreCompleted(checked) {
     this.setState({checked: checked});
-    //insert call to api that updates this bool in the db
+
+    var url = 'https://housemom-api.herokuapp.com/chore_done/' + this.state.title + "/" + this.props.username;
+    console.log("url:" + url);
+    return fetch(url)
+      .then((response) => {console.log(response);})
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
   nudge() {

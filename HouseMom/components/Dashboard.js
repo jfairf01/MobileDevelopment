@@ -80,8 +80,7 @@ getHousemates() {
     const editMode = this.state.editMode;
 
     let choreList = null;
-    let editButtonText = '';
-
+    
     if (editMode) {
       choreList = <View>
                     <FlatList style={styles.choreList}
