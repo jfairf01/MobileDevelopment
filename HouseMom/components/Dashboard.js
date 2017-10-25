@@ -66,6 +66,10 @@ getHousemates() {
       });
   }
 
+  toggleEdit(editing) {
+    this.setState({editMode: !editing});
+  }
+
   // .filter(function(user){
   //         return (user["Chores"].length > 0);
   //       })
@@ -76,6 +80,7 @@ getHousemates() {
     const editMode = this.state.editMode;
 
     let choreList = null;
+    let editButtonText = '';
 
     if (editMode) {
       choreList = <View>
@@ -100,6 +105,8 @@ getHousemates() {
                   </View>;
     }
 
+    var editButtonText = editMode ? "Done" : "Edit";
+
     if(this.state.users.length == 0){
       return(<View><Text> Loading... </Text></View>);
     }
@@ -113,9 +120,9 @@ getHousemates() {
         </View>
         <View style={styles.controls}>
             <View style={styles.resizeModeControl}>
-            <TouchableOpacity onPress={()=>{this.setState({editMode: true})}} style={styles.button}>
+            <TouchableOpacity onPress={()=>{this.toggleEdit(editMode)}} style={styles.button}>
                 <Text style={styles.buttonText}>
-                  Edit
+                  {editButtonText}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={()=>{this.getHousemates()}} style={styles.button}>
