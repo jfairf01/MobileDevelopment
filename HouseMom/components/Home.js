@@ -117,7 +117,6 @@ class Home extends Component {
       })
       .catch((err) => {
         Alert.alert("Sorry, your username or password is wrong.")
-        console.error(err);
       });
   }
   LogIn(){
@@ -128,7 +127,6 @@ class Home extends Component {
       })
       .catch((err) => {
         Alert.alert("Sorry, your username or password is wrong.")
-        console.error(err);
     });
   }
   LogOut(){
@@ -186,6 +184,7 @@ class Home extends Component {
           value={this.state.email}
         />
         <TextInput   style={{height: 40, width: 200,borderColor: 'gray', borderWidth: 1, margin:10}}
+          secureTextEntry={true}
           onChangeText={(password) => this.setState({password})}
           value={this.state.password}
         />
