@@ -12,30 +12,33 @@ import {
 
 import { Navigator } from 'react-native-deprecated-custom-components'
 
+
 import Home from './components/Home'
 import Dashboard from './components/Dashboard'
 import CreateHouse from './components/CreateHouse'
+
 
 class HouseMom extends Component {
 
   constructor() {
     super();
 
-    this.renderScene = this.renderScene.bind(this);
+    //this.renderScene = this.renderScene.bind(this);
   }
 
   renderScene(route, navigator){
-    _navigator = navigator;
+   // _navigator = navigator;
     switch(route.name){
       case 'homePage':
-        return (<Home navigator={navigator} />);
+        return (<Home navigator={navigator} {...route.passProps} />);
       case 'dashboard':
-        return (<Dashboard navigator={navigator} />);
+        return (<Dashboard navigator={navigator} {...route.passProps} />);
       case 'createHouse':
-        return (<CreateHouse navigator={navigator} />);
+        return (<CreateHouse navigator={navigator}  {...route.passProps}/>);
 
     }
   }
+
 
   render() {
     return(

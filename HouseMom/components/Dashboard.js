@@ -52,13 +52,16 @@ getUsersChores() {
   }
 
 getHousemates() {
+  console.log("getting housemates")
     return fetch('https://housemom-api.herokuapp.com/users')
       .then((response) => response.json())
       .then((responseJson) => {
+        console.log(responseJson)
         var housemates = responseJson.filter(function(user){
           return (user["Houses"][0] == "Burrow"); //change this to be dynamic
         });
         //var housemates = myhouse[0]["Inhabitants"];
+        console.log('got response')
         this.setState({users: housemates});
       })
       .catch((error) => {
