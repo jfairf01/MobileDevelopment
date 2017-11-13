@@ -150,7 +150,7 @@ class Home extends Component {
   //       console.log('user created', user)
   //       this.addNew(user);
   //     })
-  //     .catch((err) => {
+  //     .catch((err) => ,
   //       Alert.alert("Sorry, your username or password is wrong.")
   //     });
   // }
@@ -161,7 +161,7 @@ class Home extends Component {
     return fetch(url)
       .then((response) => {console.log(response);})
       .then(() => {
-        this.navigate('dashboard')
+        this.navigate('dashboard', this.state.username);
           
       })
       .catch((error) => {
