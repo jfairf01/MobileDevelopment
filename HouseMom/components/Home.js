@@ -123,12 +123,22 @@ class Home extends Component {
 
   addNew(user){
     console.log(user);
+    var req = new Request ('https://housemom-api.herokuapp.com/new_user', {
+      method: 'POST', 
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type':'application/json',
+      },
+      body: JSON.stringify({
+        firstName: this.state.first, 
+        lastName: this.state.last,
+        new_username: this.state.username,
+        new_password: this.state.password
+      })
+    })
     //'/new_user/<firstName>/<lastName>/<new_username>/<new_password>'
-    var url = 'https://housemom-api.herokuapp.com/new_user/'
-      + this.state.first +'/' + this.state.last + '/' + this.state.username
-      + '/' + this.state.password
-    console.log("url:" + url);
-    return fetch(url)
+   // var url = 'http://localhost:5000/new_user'
+    return fetch(req) 
       .then((response) => {console.log(response);})
       .then(() => {
           this.navigate('createHouse', this.state.username);
