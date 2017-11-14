@@ -21,6 +21,8 @@ import Video from 'react-native-video';
 
 import RNFirebase from 'react-native-firebase';
 
+import CreateHouse from './CreateHouse';
+
 const configurationOptions = {
   debug: true
 };
@@ -84,7 +86,7 @@ class Home extends Component {
   navigate(route){
     this.state.volume = 0;
     this.props.navigator.push({
-      name: 'dashboard'
+      name: route
     })
   }
 
@@ -96,7 +98,8 @@ class Home extends Component {
                 return { user: user,
                   email: user.email};
               });
-        this.navigate('dashboard')
+        //this.navigate('dashboard')
+       // this.navigate('createHouse');
       }
 
       else
@@ -109,15 +112,27 @@ class Home extends Component {
     }
   }
 
+  addNew(user){
+    console.log(user);
+    var url = 'https://housemom-api.herokuapp.com/new_user/John/Doe' + user.user.email;
+    console.log("url:" + url);
+    return fetch(url)
+      .then((response) => {console.log(response);})
+      .then(() => {
+          //
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
   SignUp(){
     firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
       .then((user) => {
         console.log('user created', user)
-       // this.navigate('dashboard')
+        this.addNew(user);
       })
       .catch((err) => {
         Alert.alert("Sorry, your username or password is wrong.")
-        console.error(err);
       });
   }
   LogIn(){
@@ -128,7 +143,6 @@ class Home extends Component {
       })
       .catch((err) => {
         Alert.alert("Sorry, your username or password is wrong.")
-        console.error(err);
     });
   }
   LogOut(){
@@ -145,9 +159,11 @@ class Home extends Component {
     renderCustomSkin() {
       if(this.state.user != null){
           return(
-        <View style={styles.header}>
-          <Text style={styles.loggedIn}> You are logged in as {this.state.email}</Text>
+        <View>
+          <CreateHouse user={this.state.email}/>
+
           <View style={{height:200}}>
+             <Text style={styles.loggedIn}> You are logged in as {this.state.email}</Text>
             <TouchableOpacity style={styles.logOut} onPress={this.LogOut}>
               <Text style={{marginLeft: 20, marginRight: 20, color: 'white'}}>
                 Log Out
