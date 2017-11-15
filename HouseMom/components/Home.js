@@ -123,22 +123,18 @@ class Home extends Component {
 
   addNew(user){
     console.log(user);
-    var req = new Request ('https://housemom-api.herokuapp.com/new_user', {
-      method: 'POST', 
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type':'application/json',
-      },
-      body: JSON.stringify({
-        firstName: this.state.first, 
-        lastName: this.state.last,
-        new_username: this.state.username,
-        new_password: this.state.password
-      })
-    })
-    //'/new_user/<firstName>/<lastName>/<new_username>/<new_password>'
-   // var url = 'http://localhost:5000/new_user'
-    return fetch(req) 
+    var data_ = new FormData();
+    data_.append('json', JSON.stringify({
+            'new_username': this.state.username,
+            'new_password': this.state.password,
+            'firstName': this.state.first,
+            'lastName': this.state.last
+    }));
+
+    return fetch('https://housemom-api.herokuapp.com/new_user', {
+      method: 'POST',
+      body: data_
+      }) 
       .then((response) => {console.log(response);})
       .then(() => {
           this.navigate('createHouse', this.state.username);
@@ -154,16 +150,7 @@ class Home extends Component {
         console.error(error);
       });
   }
-  // SignUp(){
-  //   firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
-  //     .then((user) => {
-  //       console.log('user created', user)
-  //       this.addNew(user);
-  //     })
-  //     .catch((err) => ,
-  //       Alert.alert("Sorry, your username or password is wrong.")
-  //     });
-  // }
+
   LogIn(){
     var url = 'https://housemom-api.herokuapp.com/login/' + 
      this.state.username + '/' + this.state.password
