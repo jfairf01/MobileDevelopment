@@ -24,6 +24,11 @@ import RNFirebase from 'react-native-firebase';
 import CreateHouse from './CreateHouse';
 // import NewUser from './newUser';
 
+
+var Fabric = require('react-native-fabric');
+
+var { Crashlytics } = Fabric;
+
 const configurationOptions = {
   debug: true
 };
@@ -154,6 +159,16 @@ class Home extends Component {
   //       Alert.alert("Sorry, your username or password is wrong.")
   //     });
   // }
+
+    // a block of code to cause a crash for crashlytics testing
+    // console.log("starting crash");
+    // Crashlytics.setUserName('megaman');
+    // Crashlytics.setUserEmail('user@email.com');
+    // Crashlytics.setUserIdentifier('1234');
+    // Crashlytics.setBool('has_posted', true);
+    // Crashlytics.setString('organization', 'Acme. Corp');
+    // // Forces a native crash for testing
+    // Crashlytics.crash();
   LogIn(){
     var url = 'https://housemom-api.herokuapp.com/login/' + 
      this.state.username + '/' + this.state.password

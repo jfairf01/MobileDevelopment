@@ -1,3 +1,11 @@
+# Crashlytics
+#
+fabric.properties
+
+# Keystore
+#
+signed-release-key.keystore
+
 # OSX
 #
 .DS_Store

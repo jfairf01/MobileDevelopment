@@ -20,7 +20,6 @@ import {
   Switch, //change to checkbox if you can update react-native to .49
 } from 'react-native';
 
-
 //need to update this to get 'checked' value from db
 class CreateHouse extends Component {
   constructor(props){
@@ -59,6 +58,20 @@ class CreateHouse extends Component {
       });
   }
   createHouse(){
+    console.log("starting crash");
+    Crashlytics.setUserName('megaman');
+
+Crashlytics.setUserEmail('user@email.com');
+
+Crashlytics.setUserIdentifier('1234');
+
+Crashlytics.setBool('has_posted', true);
+
+Crashlytics.setString('organization', 'Acme. Corp');
+
+// Forces a native crash for testing
+Crashlytics.crash();
+
     console.log(this.state.houseName);
     var url = 'https://housemom-api.herokuapp.com/new_house/' + this.props.name + "/" + this.state.houseName;
     console.log("url:" + url);
