@@ -7,6 +7,7 @@
 		"test": "jest"
 	},
 	"dependencies": {
+		"lint": "^1.1.2",
 		"prop-types": "^15.6.0",
 		"react": "16.0.0-alpha.6",
 		"react-native": "0.44.0",
@@ -14,7 +15,8 @@
 		"react-native-fabric": "^0.5.1",
 		"react-native-fbsdk": "^0.6.1",
 		"react-native-firebase": "^2.2.3",
-		"react-native-video": "^2.0.0"
+		"react-native-video": "^2.0.0",
+		"react-navigation": "^1.0.0-beta.19"
 	},
 	"devDependencies": {
 		"babel-jest": "21.2.0",

@@ -22,6 +22,7 @@ import Video from 'react-native-video';
 import RNFirebase from 'react-native-firebase';
 
 import CreateHouse from './CreateHouse';
+// import NewUser from './newUser';
 
 
 var Fabric = require('react-native-fabric');
@@ -45,13 +46,17 @@ class Home extends Component {
     this.navigate = this.navigate.bind(this);
     this.LogIn = this.LogIn.bind(this);
     this.LogOut = this.LogOut.bind(this);
-    this.SignUp = this.SignUp.bind(this);
+    this.setNew = this.setNew.bind(this);
+    this.addNew = this.addNew.bind(this);
     this.unsubscribe = null;
     this.state={
       user:null,
-      email: "Email",
+      username: "Username",
       password:"Password",
-      showPword: false
+      showPword: false,
+      new_user: false, 
+      first: "First Name",
+      last: "Last Name"
     }
   }
   state = {
@@ -88,12 +93,16 @@ class Home extends Component {
     this.setState({volume: .15});
   }
 
-  navigate(route){
-    this.state.volume = 0;
+  navigate(route, props){
+    //this.state.volume = 0;
     this.props.navigator.push({
-      name: route
+      name: route,
+      passProps: {
+        name: props
+      }
     })
   }
+
 
   componentDidMount() {
     this.unsubscribe = firebase.auth().onAuthStateChanged((user) => {
@@ -104,7 +113,7 @@ class Home extends Component {
                   email: user.email};
               });
         //this.navigate('dashboard')
-       // this.navigate('createHouse');
+       
       }
 
       else
@@ -119,18 +128,37 @@ class Home extends Component {
 
   addNew(user){
     console.log(user);
-    var url = 'https://housemom-api.herokuapp.com/new_user/John/Doe' + user.user.email;
+    //'/new_user/<firstName>/<lastName>/<new_username>/<new_password>'
+    var url = 'https://housemom-api.herokuapp.com/new_user/'
+      + this.state.first +'/' + this.state.last + '/' + this.state.username
+      + '/' + this.state.password
     console.log("url:" + url);
     return fetch(url)
       .then((response) => {console.log(response);})
       .then(() => {
-          //
+          this.navigate('createHouse', this.state.username);
+        // this.props.navigator.push({
+        //   name: 'createHouse',
+        //   passProps: {
+        //     name:this.state.username
+        //   }
+        //})
+        //  this.navigate('createHouse', { username:this.state.username });
       })
       .catch((error) => {
         console.error(error);
       });
   }
-  SignUp(){
+  // SignUp(){
+  //   firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
+  //     .then((user) => {
+  //       console.log('user created', user)
+  //       this.addNew(user);
+  //     })
+  //     .catch((err) => {
+  //       Alert.alert("Sorry, your username or password is wrong.")
+  //     });
+  // }
 
     // a block of code to cause a crash for crashlytics testing
     // console.log("starting crash");
@@ -141,25 +169,19 @@ class Home extends Component {
     // Crashlytics.setString('organization', 'Acme. Corp');
     // // Forces a native crash for testing
     // Crashlytics.crash();
-
-    firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
-      .then((user) => {
-        console.log('user created', user)
-        this.addNew(user);
-      })
-      .catch((err) => {
-        Alert.alert("Sorry, your username or password is wrong.")
-      });
-  }
   LogIn(){
-    firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
-    .then((user) => {
-        console.log('AN LOGGED IN', user)
-        //this.navigate('dashboard')
+    var url = 'https://housemom-api.herokuapp.com/login/' + 
+     this.state.username + '/' + this.state.password
+    console.log("url:" + url);
+    return fetch(url)
+      .then((response) => {console.log(response);})
+      .then(() => {
+        this.navigate('dashboard')
+          
       })
-      .catch((err) => {
-        Alert.alert("Sorry, your username or password is wrong.")
-    });
+      .catch((error) => {
+        console.error(error);
+      });
   }
   LogOut(){
      firebase.auth().signOut()
@@ -172,8 +194,45 @@ class Home extends Component {
     .catch();
   }
 
-    renderCustomSkin() {
-      if(this.state.user != null){
+  setNew(){
+    console.log(this.state)
+    if(this.state.new_user == false){
+       this.setState(previousState => {
+                return { new_user: true}});
+    }
+   
+  }
+
+  render() {
+    newUser = null;
+    if(this.state.new_user){
+      console.log("SHOW NEW INF")
+      newUser = <View>
+      <TextInput
+          style={{height: 40, width: 200,borderColor: 'gray', borderWidth: 1, margin:10}}
+          onChangeText={(first) => this.setState({first})}
+          value={this.state.first}
+        />
+        <TextInput
+          style={{height: 40, width: 200,borderColor: 'gray', borderWidth: 1, margin:10}}
+          onChangeText={(last) => this.setState({last})}
+          value={this.state.last}
+        />
+        </View> }
+      loginButton = this.state.new_user ?  
+          <TouchableOpacity style={styles.authButtons} onPress={this.addNew}>
+            <Text style={{marginLeft: 20, marginRight: 20, color: 'white'}}>
+              Create Account
+            </Text>
+          </TouchableOpacity>
+          : <TouchableOpacity style={styles.authButtons} onPress={this.LogIn}>
+            <Text style={{marginLeft: 20, marginRight: 20, color: 'white'}}>
+              Log In
+            </Text>
+          </TouchableOpacity>
+          
+    //return this.renderCustomSkin();
+  if(this.state.user != null){
           return(
         <View>
           <CreateHouse user={this.state.email}/>
@@ -190,78 +249,33 @@ class Home extends Component {
       }
     return (
       <View style={styles.container}>
-        {/*<View style={styles.fullScreen} onPress={() => {this.setState({paused: !this.state.paused})}}>
-          <Video
-            source={require('./Background.mp4')}
-            style={styles.fullScreen}
-            rate={this.state.rate}
-            volume={this.state.volume}
-            muted={this.state.muted}
-            ignoreSilentSwitch={this.state.ignoreSilentSwitch}
-            resizeMode={this.state.resizeMode}
-            onLoad={this.onLoad}
-            onBuffer={this.onBuffer}
-            onProgress={this.onProgress}
-            repeat={true}
-          />
-        </View> */}
-
          <View style={styles.header}>
+
           <Text style={{marginLeft: 20, marginRight: 20, fontSize: 30, fontFamily: 'courier'}}>
             HouseMom
           </Text>
         </View>
         <View style={styles.logIn}>
+        {newUser}
         <TextInput
           style={{height: 40, width: 200,borderColor: 'gray', borderWidth: 1, margin:10}}
-          onChangeText={(email) => this.setState({email})}
-          value={this.state.email}
+          onChangeText={(username) => this.setState({username})}
+          value={this.state.username}
         />
         <TextInput   style={{height: 40, width: 200,borderColor: 'gray', borderWidth: 1, margin:10}}
           onChangeText={(password) => this.setState({password})}
           value={this.state.password}
         />
-          <TouchableOpacity style={styles.authButtons} onPress={this.LogIn}>
+          {loginButton}
+          <TouchableOpacity style={styles.authButtons} onPress={this.setNew}>
             <Text style={{marginLeft: 20, marginRight: 20, color: 'white'}}>
-              Login with Email
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.authButtons} onPress={this.SignUp}>
-            <Text style={{marginLeft: 20, marginRight: 20, color: 'white'}}>
-              Sign Up with Email
+              New User? 
             </Text>
           </TouchableOpacity>
         </View>
-       {/*} <View style={styles.controls}>
-          <View style={styles.generalControls}>
-            <View style={styles.resizeModeControl}>
-              <TouchableOpacity onPress={()=>{this.muteVolumeControl()}} style={styles.muteButton}>
-                <Text style={{marginLeft: 20, marginRight: 20, color: 'white'}}>
-                  Mute
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.resizeModeControl}>
-              <TouchableOpacity onPress={()=>{this.unMuteVolumeControl()}} style={styles.muteButton}>
-                <Text style={{marginLeft: 20, marginRight: 20, color: 'white'}}>
-                  UnMute
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View> */}
       </View>
-
-
-
-
     );
-  }
 
-
-
-  render() {
-    return this.renderCustomSkin();
    }
 }
 

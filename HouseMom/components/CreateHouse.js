@@ -32,20 +32,26 @@ class CreateHouse extends Component {
     this.createHouse = this.createHouse.bind(this);
   }
 
-  navigate(route){
+  navigate(route, props){
+    //this.state.volume = 0;
     this.props.navigator.push({
-      name: route
+      name: route,
+      passProps: {
+        name: props
+      }
     })
   }
 
+
   joinHouse(){
-    console.log(this.props);
-    var url = 'https://housemom-api.herokuapp.com/new_house/' + this.props.user + "/" + this.state.houseName;
+    console.log(this.props.name);
+    console.log(this.state.houseName)
+    var url = 'https://housemom-api.herokuapp.com/new_house_user/' + this.props.name + "/" + this.state.houseName;
     console.log("url:" + url);
     return fetch(url)
       .then((response) => {console.log(response);})
       .then(() => {
-          //
+         this.navigate('dashboard', this.props.name) 
       })
       .catch((error) => {
         console.error(error);
@@ -67,18 +73,19 @@ Crashlytics.setString('organization', 'Acme. Corp');
 Crashlytics.crash();
 
     console.log(this.state.houseName);
-    var url = 'https://housemom-api.herokuapp.com/new_house/' + this.props.user + "/" + this.state.houseName;
+    var url = 'https://housemom-api.herokuapp.com/new_house/' + this.props.name + "/" + this.state.houseName;
     console.log("url:" + url);
     return fetch(url)
       .then((response) => {console.log(response);})
       .then(() => {
-          //
+          this.navigate('dashboard', this.props.name) 
       })
       .catch((error) => {
         console.error(error);
       });
   }
   render() {
+    console.log(this.props)
     return(
       <View>
 
