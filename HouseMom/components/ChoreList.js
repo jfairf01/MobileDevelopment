@@ -51,7 +51,7 @@ class ChoreList extends Component {
           <FlatList
             keyExtractor={item => item["First Name"]}
             data={this.state.usersChores}
-            renderItem={({item}) => <Chore housemate={item["First Name"]} title={item["Chores"][0]} deadline="Thursday"></Chore>}
+            renderItem={({item}) => <Chore housemate={item["First Name"]} title={item["Chores"][0]}></Chore>}
           ></FlatList>
         </View>
       );

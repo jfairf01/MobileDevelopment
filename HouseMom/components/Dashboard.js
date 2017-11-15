@@ -28,7 +28,8 @@ class Dashboard extends Component {
     this.state = {
       editMode: false,
       users: [],
-      modalVisible: false
+      modalVisible: false,
+      myHouse: null
     };
     //this.getUsersChores();
     this.getHousemates = this.getHousemates.bind(this);
@@ -51,15 +52,15 @@ class Dashboard extends Component {
     this.props.navigator.pop()
   }
 
-getUsersChores() {
-    return fetch('https://housemom-api.herokuapp.com/users')
-      .then((response) => response.json())
-      .then((responseJson) => {
-        this.setState({users: responseJson})})
-      .catch((error) => {
-        console.error(error);
-      });
-  }
+// getUsersChores() {
+//     return fetch('https://housemom-api.herokuapp.com/users')
+//       .then((response) => response.json())
+//       .then((responseJson) => {
+//         this.setState({users: responseJson})})
+//       .catch((error) => {
+//         console.error(error);
+//       });
+//   }
 
 getHousemates() {
   console.log("getHousemates function");
@@ -87,22 +88,27 @@ getHousemates() {
           // console.log(this.props)
           console.log("getting housemates")
           var name = this.props.name;
-            return fetch('https://housemom-api.herokuapp.com/users')
+          console.log("My house name is ");
+          console.log(myData['Houses'][0]);
+            return fetch('https://housemom-api.herokuapp.com/house/'+myData['Houses'][0])
               .then((response) => response.json())
               .then((responseJson) => {
-                console.log(responseJson)
+                console.log("My house is ");
+                console.log(responseJson);
+                // this.state.users = responseJson['success']['Inhabitants'];
 
-                var currUser = responseJson.filter(function(user){
-                  return (user["Username"] == name); //change this to be dynamic
-                });
-                var house = currUser[0]["Houses"][0];
+                // var currUser = responseJson.filter(function(user){
+                //   return (user["Username"] == name); //change this to be dynamic
+                // });
+                // var house = currUser[0]["Houses"][0];
 
-                var housemates = responseJson.filter(function(user){
-                  return (user["Houses"][0] == house); //change this to be dynamic
-                });
+                // var housemates = responseJson.filter(function(user){
+                //   return (user["Houses"][0] == house); //change this to be dynamic
+                // });
                 //var housemates = myhouse[0]["Inhabitants"];
                 console.log('got response')
-                this.setState({users: housemates});
+                this.setState({users: responseJson['success']['Inhabitants']});
+                this.setState({myHouse: responseJson});
               })
               .catch((error) => {
                 console.error(error);
@@ -116,8 +122,6 @@ getHousemates() {
   }
 
   toggleEdit(editing) {
-
-    
     this.setState({editMode: !editing});
   }
 
@@ -181,7 +185,7 @@ getHousemates() {
                   Refresh
                 </Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={()=>{this.props.navigator.pop()}} style={styles.button}>
+              <TouchableOpacity onPress={()=>{this.homepage()}} style={styles.button}>
                 <Text style={styles.buttonText}>
                   Go Back
                 </Text>

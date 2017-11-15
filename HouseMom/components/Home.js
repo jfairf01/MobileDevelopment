@@ -59,39 +59,6 @@ class Home extends Component {
       last: "Last Name"
     }
   }
-  // state = {
-  //   rate: 1,
-  //   volume: 0,
-  //   muted: false,
-  //   resizeMode: 'cover',
-  //   duration: 0.0,
-  //   currentTime: 0.0,
-  //   controls: false,
-  //   paused: true,
-  //   skin: 'custom',
-  //   ignoreSilentSwitch: null,
-  //   isBuffering: false,
-  // };
-
-  // onLoad(data) {
-  //   console.log('On load fired!');
-  //   this.setState({duration: data.duration});
-  // }
-
-  // onProgress(data) {
-  //   this.setState({currentTime: data.currentTime});
-  // }
-
-  // onBuffer({ isBuffering }: { isBuffering: boolean }) {
-  //   this.setState({ isBuffering });
-  // }
-
-  // muteVolumeControl() {
-  //   this.setState({volume: 0});
-  // }
-  // unMuteVolumeControl() {
-  //   this.setState({volume: .15});
-  // }
 
   navigate(route, props){
     //this.state.volume = 0;

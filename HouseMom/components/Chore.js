@@ -29,13 +29,19 @@ class Chore extends Component {
       checked: false,
       modalVisible: false,
       chores: [],
-      selectedChore: ''
+      selectedChore: this.props.title,
+      isLoading: true,
+      choreList: [],
+      firstLoad: true
     };
+    this.getChores();
   }
 
   componentWillMount(){
     console.log("getting chores");
     this.getChores();
+    console.log("chores are");
+    console.log(this.state.chores);
   }
 
 
@@ -45,7 +51,10 @@ class Chore extends Component {
     return fetch('https://housemom-api.herokuapp.com/chores')
       .then((response) => response.json())
       .then((responseJson) => {
-        this.setState({chores: responseJson, selectedChore: responseJson[0]});
+        console.log("Response from getChores");
+        console.log(responseJson);
+        this.setState({chores: responseJson['success']});
+        this.setState({isLoading: false});
       })
       .catch((error) => {
         console.error(error);
@@ -83,15 +92,37 @@ class Chore extends Component {
 
 //is there a way to test this? (yes once you can nudge)
   choreCompleted(checked) {
-    this.setState({checked: checked});
+    console.log("Is it checked?");
+    console.log(this.state.checked);
 
-    var url = 'https://housemom-api.herokuapp.com/chore_done/' + this.state.title + "/" + this.props.username;
-    console.log("url:" + url);
-    return fetch(url)
-      .then((response) => {console.log(response);})
-      .catch((error) => {
-        console.error(error);
-      });
+    // This function will ping the API to say the person's chore is done
+    if(this.state.checked){
+      var url = 'https://housemom-api.herokuapp.com/chore_done/' + this.state.title + "/" + this.props.username;
+      fetch(url)
+        .then((response) => response.json())
+        .then((responseJson) => {
+          console.log("My response for chore done is ");
+          console.log(responseJson);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+      }
+    // This function will ping the API to tell the person to do their chore
+    else{
+      var url = 'https://housemom-api.herokuapp.com/do_your_chore/' + this.state.title + "/" + this.props.username;
+      fetch(url)
+        .then((response) => response.json())
+        .then((responseJson) => {
+          console.log("My response for chore done is ");
+          console.log(responseJson);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+    this.setState({checked: checked});
+    return this.state.checked;
   }
 
   nudge() {
@@ -109,81 +140,112 @@ class Chore extends Component {
   }
 
   render() {
+    if (this.state.isLoading){
+      console.log("It is loading...");
+      return <View><Text>Loading...</Text></View>;
+    }
+    else{
+      console.log("What's in my state?");
+      console.log(this.state);
+      console.log("It is not loading anymore");
+      console.log("Our chores are");
+      console.log(this.state.chores);
+      // this.getChores();
+      // console.log("chores2 are");
+      // console.log(this.state.chores);
 
-    nudgeButton = <TouchableOpacity onPress={()=>{this.nudge()}} style={styles.button}>
-                <Text style={styles.buttonText}>
-                  Nudge
-                </Text>
-              </TouchableOpacity>;
+      // var myButtons;
+      if (this.state.firstLoad){
+        // Push the person's current chore first
+        for (var i=0; i < this.state.chores.length; i++){
+          if(this.state.chores[i] == this.state.title){ 
+            this.state.choreList.push( <Picker.Item label={this.state.chores[i]} value={this.state.chores[i]} key={i}/>);
+          }
+        }
+        // Push the rest of the chores
+        for (var i=0; i < this.state.chores.length; i++){
+          if(this.state.chores[i] != this.state.title){ 
+            this.state.choreList.push( <Picker.Item label={this.state.chores[i]} value={this.state.chores[i]} key={i}/>);
+          }
+        }
+        this.setState({firstLoad: false});
+      }
+      console.log("My chore list is ");
+      console.log(this.state.choreList);
+      
 
-    changeButton = <TouchableOpacity onPress={() => {this.setState({modalVisible: true})}} style={styles.button}>
-                <Text style={styles.buttonText}>
-                  Change
-                </Text>
-              </TouchableOpacity>;
+      nudgeButton = <TouchableOpacity onPress={()=>{this.nudge()}} style={styles.button}>
+                  <Text style={styles.buttonText}>
+                    Nudge
+                  </Text>
+                </TouchableOpacity>;
 
-    sideButton = this.props.edit ? changeButton : nudgeButton;
+      changeButton = <TouchableOpacity onPress={() => {this.setState({modalVisible: true})}} style={styles.button}>
+                  <Text style={styles.buttonText}>
+                    Change
+                  </Text>
+                </TouchableOpacity>;
 
-    return(
-      <View style={styles.choreRow}>
-        <Modal
-          animationType="slide"
-          transparent={false}
-          visible={this.state.modalVisible}
-          onRequestClose={() => {alert("Modal has been closed.")}}
-          >
-         <View style={{marginTop: 22}}>
-          <View>
-            <Text> Assign a chore to {this.props.housemate}. Her current chore is {this.props.title} </Text>
-            <Text>Choose from the list:</Text>
-            <Picker
-                   mode="dialog"
-                   prompt="Pick a chore"
-                   selectedValue={this.props.selectedChore}
-                   onValueChange={(chore)=>{console.log("picked chore: " + chore); this.setState({selectedChore: chore})}}>
-                   {this.state.chores.map((item, index) => {
-                     return (<Picker.Item label={item} value={item} key={index}/>) 
-                                    })}
-            </Picker>
-            <TouchableOpacity onPress={() => {this.setChore()}} style={styles.button}>
-                <Text style={styles.buttonText}>
-                  Assign
-                </Text>
-              </TouchableOpacity>
+      sideButton = this.props.edit ? changeButton : nudgeButton;
 
-            <Text>Or add a chore:</Text>
-            <TextInput
-              style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-              onChangeText={(text) => this.setState({text})}
-              value={this.state.text}
-            ></TextInput>
-            <TouchableOpacity onPress={() => {this.addChore(this.state.text)}} style={styles.button}>
-                <Text style={styles.buttonText}>
-                  Add
-                </Text>
-              </TouchableOpacity>
+      return(
+        <View style={styles.choreRow}>
+          <Modal
+            animationType="slide"
+            transparent={false}
+            visible={this.state.modalVisible}
+            onRequestClose={() => {alert("Modal has been closed.")}}
+            >
+           <View style={{marginTop: 22}}>
+            <View>
+              <Text> Assign a chore to {this.props.housemate}. Her current chore is {this.props.title} </Text>
+              <Text>Choose from the list:</Text>
+              <Picker
+                     mode="dialog"
+                     prompt="Pick a chore"
+                     selectedValue={this.props.selectedChore}
+                     onValueChange={(chore)=>{console.log("picked chore: " + chore); this.setState({choreList: [], isLoading: false, firstLoad: true, selectedChore: chore, title: chore})}}>
+                     {this.state.choreList}
+              </Picker>
+              <TouchableOpacity onPress={() => {this.setChore(); this.setState({modalVisible: false});}} style={styles.button}>
+                  <Text style={styles.buttonText}>
+                    Assign
+                  </Text>
+                </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => {this.setState({modalVisible: false});}} style={styles.button}>
-                <Text style={styles.buttonText}>
-                  Done
-                </Text>
-              </TouchableOpacity>
+              <Text>Or add a chore:</Text>
+              <TextInput
+                style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+                onChangeText={(text) => this.setState({text})}
+                value={this.state.text}
+              ></TextInput>
+              <TouchableOpacity onPress={() => {this.addChore(this.state.text)}} style={styles.button}>
+                  <Text style={styles.buttonText}>
+                    Add
+                  </Text>
+                </TouchableOpacity>
 
-          </View>
-         </View>
-        </Modal>
+              <TouchableOpacity onPress={() => {this.setState({modalVisible: false});}} style={styles.button}>
+                  <Text style={styles.buttonText}>
+                    Done
+                  </Text>
+                </TouchableOpacity>
 
-          <Switch onValueChange={(value)=>this.choreCompleted(value)} value={this.state.checked} />
-          <Text style={styles.choreName}>
-            {this.props.housemate}
-          </Text>
-          <View style={styles.choreDetails}>
-            <Text style={styles.choreTitle}>{this.props.title}</Text>
-            <Text style={styles.choreDeadline}>{this.props.deadline}</Text>
-          </View>
-          {sideButton}
-    </View>
-    );
+            </View>
+           </View>
+          </Modal>
+
+            <Switch onValueChange={(value)=>this.choreCompleted(value)} value={this.state.checked} />
+            <Text style={styles.choreName}>
+              {this.props.housemate}
+            </Text>
+            <View style={styles.choreDetails}>
+              <Text style={styles.choreTitle}>{this.props.title}</Text>
+            </View>
+            {sideButton}
+      </View>
+      );
+    }
   }
 }
 
