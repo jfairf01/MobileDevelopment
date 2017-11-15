@@ -73,7 +73,7 @@ Crashlytics.setString('organization', 'Acme. Corp');
 Crashlytics.crash();
 
     console.log(this.state.houseName);
-    var url = 'https://housemom-api.herokuapp.com/new_house/' + this.props.name + "/" + this.state.houseName;
+    var url = 'https://housemom-api.herokuapp.com/new_house/'  + this.state.houseName + "/" + this.props.name;
     console.log("url:" + url);
     return fetch(url)
       .then((response) => {console.log(response);})

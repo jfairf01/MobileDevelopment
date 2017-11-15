@@ -29,6 +29,7 @@ class Dashboard extends Component {
       modalVisible: false
     };
     //this.getUsersChores();
+    this.getHousemates = this.getHousemates.bind(this);
   }
 
   componentWillMount(){
@@ -53,13 +54,21 @@ getUsersChores() {
   }
 
 getHousemates() {
+  console.log(this.props)
   console.log("getting housemates")
+  var name = this.props.name;
     return fetch('https://housemom-api.herokuapp.com/users')
       .then((response) => response.json())
       .then((responseJson) => {
         console.log(responseJson)
+
+        var currUser = responseJson.filter(function(user){
+          return (user["Username"] == name); //change this to be dynamic
+        });
+        var house = currUser[0]["Houses"][0];
+
         var housemates = responseJson.filter(function(user){
-          return (user["Houses"][0] == "Burrow"); //change this to be dynamic
+          return (user["Houses"][0] == house); //change this to be dynamic
         });
         //var housemates = myhouse[0]["Inhabitants"];
         console.log('got response')
@@ -82,7 +91,7 @@ getHousemates() {
 
   render() {
     // console.log(this.state.users);
-
+    console.log(this.props)
     const editMode = this.state.editMode;
 
     let choreList = null;

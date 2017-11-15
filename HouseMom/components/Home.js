@@ -128,12 +128,18 @@ class Home extends Component {
 
   addNew(user){
     console.log(user);
-    //'/new_user/<firstName>/<lastName>/<new_username>/<new_password>'
-    var url = 'https://housemom-api.herokuapp.com/new_user/'
-      + this.state.first +'/' + this.state.last + '/' + this.state.username
-      + '/' + this.state.password
-    console.log("url:" + url);
-    return fetch(url)
+    var data_ = new FormData();
+    data_.append('json', JSON.stringify({
+            'new_username': this.state.username,
+            'new_password': this.state.password,
+            'firstName': this.state.first,
+            'lastName': this.state.last
+    }));
+
+    return fetch('https://housemom-api.herokuapp.com/new_user', {
+      method: 'POST',
+      body: data_
+      }) 
       .then((response) => {console.log(response);})
       .then(() => {
           this.navigate('createHouse', this.state.username);
@@ -149,6 +155,7 @@ class Home extends Component {
         console.error(error);
       });
   }
+
   // SignUp(){
   //   firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
   //     .then((user) => {
@@ -176,7 +183,7 @@ class Home extends Component {
     return fetch(url)
       .then((response) => {console.log(response);})
       .then(() => {
-        this.navigate('dashboard')
+        this.navigate('dashboard', this.state.username);
           
       })
       .catch((error) => {
