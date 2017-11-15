@@ -4,7 +4,6 @@ import React, {
 
 import {
   AlertIOS, //unneeded?
-  Alert,
   AppRegistry,
   Button,
   Platform,
@@ -18,6 +17,7 @@ import {
   Picker,
   TextInput,
   Switch, //change to checkbox if you can update react-native to .49
+  Alert
 } from 'react-native';
 
 //need to update this to get 'checked' value from db
@@ -33,7 +33,6 @@ class CreateHouse extends Component {
   }
 
   navigate(route, props){
-    //this.state.volume = 0;
     this.props.navigator.push({
       name: route,
       passProps: {
@@ -44,54 +43,70 @@ class CreateHouse extends Component {
 
 
   joinHouse(){
+    console.log("joinHouse Function");
     console.log(this.props.name);
     console.log(this.state.houseName)
     var url = 'https://housemom-api.herokuapp.com/new_house_user/' + this.props.name + "/" + this.state.houseName;
     console.log("url:" + url);
     return fetch(url)
-      .then((response) => {console.log(response);})
-      .then(() => {
-         this.navigate('dashboard', this.props.name) 
+      .then((response) => response.json())
+      .then((responseJson) => {
+        console.log("error is " + responseJson['error']);
+        if (responseJson['error'] != 'None'){
+          Alert.alert(responseJson['error']);
+        }
+        else{
+          this.navigate('dashboard', this.props.name);
+        }
       })
       .catch((error) => {
         console.error(error);
       });
   }
   createHouse(){
-    console.log("starting crash");
-    Crashlytics.setUserName('megaman');
+    console.log("Going to create a house");
+    console.log("Name should be " + this.props.name);
+    // console.log("starting crash");
+//     Crashlytics.setUserName('megaman');
 
-Crashlytics.setUserEmail('user@email.com');
+// Crashlytics.setUserEmail('user@email.com');
 
-Crashlytics.setUserIdentifier('1234');
+// Crashlytics.setUserIdentifier('1234');
 
-Crashlytics.setBool('has_posted', true);
+// Crashlytics.setBool('has_posted', true);
 
-Crashlytics.setString('organization', 'Acme. Corp');
+// Crashlytics.setString('organization', 'Acme. Corp');
 
-// Forces a native crash for testing
-Crashlytics.crash();
+// // Forces a native crash for testing
+// Crashlytics.crash();
 
-    console.log(this.state.houseName);
+    console.log("House name is " + this.state.houseName);
     var url = 'https://housemom-api.herokuapp.com/new_house/'  + this.state.houseName + "/" + this.props.name;
     console.log("url:" + url);
     return fetch(url)
-      .then((response) => {console.log(response);})
-      .then(() => {
-          this.navigate('dashboard', this.props.name) 
+      .then((response) => response.json())
+      .then((responseJson) => {
+        console.log("error is " + responseJson['error']);
+        if (responseJson['error'] != 'None'){
+          Alert.alert(responseJson['error']);
+        }
+        else{
+          this.navigate('dashboard', this.props.name);
+        }
       })
       .catch((error) => {
         console.error(error);
       });
   }
   render() {
+    console.log("CreateHouse render");
     console.log(this.props)
     return(
       <View>
 
-        <TextInput onChangeText={(houseName) => this.setState({houseName})}> Enter House Name to Join </TextInput>
+        <TextInput placeholder = "New House Name" placeholderTextColor = "#808080" onChangeText={(houseName) => this.setState({houseName})}/>
         <Button title="Join House" onPress={this.joinHouse}>  </Button>
-        <TextInput onChangeText={(houseName) => this.setState({houseName})}> Enter New House Name </TextInput>
+        <TextInput placeholder = "Existing House Name" placeholderTextColor = "#808080" onChangeText={(houseName) => this.setState({houseName})}/>
         <Button title="Create House" onPress={this.createHouse}>  </Button>
     </View>
     );

@@ -4,7 +4,6 @@ import React, {
 
 import {
   AlertIOS, //unneeded?
-  Alert,
   AppRegistry,
   Platform,
   StyleSheet,
@@ -17,6 +16,7 @@ import {
   Picker,
   TextInput,
   Switch, //change to checkbox if you can update react-native to .49
+  Alert
 } from 'react-native';
 
 

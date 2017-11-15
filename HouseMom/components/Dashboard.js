@@ -11,7 +11,8 @@ import {
   View,
   TouchableOpacity,
   CheckBox,
-  FlatList
+  FlatList,
+  Alert
 } from 'react-native';
 
 import Chore from './Chore.js';
@@ -23,6 +24,7 @@ class Dashboard extends Component {
   constructor(props){
     super(props);
     this.navigate = this.navigate.bind(this);
+    this.homePage = this.homePage.bind(this);
     this.state = {
       editMode: false,
       users: [],
@@ -37,10 +39,16 @@ class Dashboard extends Component {
     this.getHousemates();
   }
 
-  navigate(route){
+  navigate(route, props){
     this.props.navigator.push({
-      name: route
+      name: route,
+      passProps: {
+        name: props
+      }
     })
+  }
+  homePage(){
+    this.props.navigator.pop()
   }
 
 getUsersChores() {
@@ -54,29 +62,57 @@ getUsersChores() {
   }
 
 getHousemates() {
-  console.log(this.props)
-  console.log("getting housemates")
-  var name = this.props.name;
-    return fetch('https://housemom-api.herokuapp.com/users')
-      .then((response) => response.json())
-      .then((responseJson) => {
-        console.log(responseJson)
+  console.log("getHousemates function");
+  var myUsername = this.props['name'];
+  var myData;
+  console.log("My username is " + myUsername);
+  console.log("First let's find my house");
+  fetch('https://housemom-api.herokuapp.com/user/' + myUsername)
+    .then((response) => response.json())
+    .then((responseJson) => {
+      console.log("My response to user is ")
+      console.log(responseJson)
+      if (responseJson['error'] != 'None'){
+        Alert.alert("Faulty Username provided. Redirecting to Login.");
+        this.homePage();
+      }
+      else{
+        myData = responseJson['success']
+        console.log("My data is;");
+        console.log(myData);
+        if (myData['Houses'].length == 0){
+          this.navigate('createHouse', myData['Username']);
+        }
+        else{
+          // console.log(this.props)
+          console.log("getting housemates")
+          var name = this.props.name;
+            return fetch('https://housemom-api.herokuapp.com/users')
+              .then((response) => response.json())
+              .then((responseJson) => {
+                console.log(responseJson)
 
-        var currUser = responseJson.filter(function(user){
-          return (user["Username"] == name); //change this to be dynamic
-        });
-        var house = currUser[0]["Houses"][0];
+                var currUser = responseJson.filter(function(user){
+                  return (user["Username"] == name); //change this to be dynamic
+                });
+                var house = currUser[0]["Houses"][0];
 
-        var housemates = responseJson.filter(function(user){
-          return (user["Houses"][0] == house); //change this to be dynamic
-        });
-        //var housemates = myhouse[0]["Inhabitants"];
-        console.log('got response')
-        this.setState({users: housemates});
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+                var housemates = responseJson.filter(function(user){
+                  return (user["Houses"][0] == house); //change this to be dynamic
+                });
+                //var housemates = myhouse[0]["Inhabitants"];
+                console.log('got response')
+                this.setState({users: housemates});
+              })
+              .catch((error) => {
+                console.error(error);
+              });
+        }
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+    });
   }
 
   toggleEdit(editing) {

@@ -40,9 +40,9 @@ class Home extends Component {
 
   constructor(props) {
     super(props);
-    this.onLoad = this.onLoad.bind(this);
-    this.onProgress = this.onProgress.bind(this);
-    this.onBuffer = this.onBuffer.bind(this);
+    // this.onLoad = this.onLoad.bind(this);
+    // this.onProgress = this.onProgress.bind(this);
+    // this.onBuffer = this.onBuffer.bind(this);
     this.navigate = this.navigate.bind(this);
     this.LogIn = this.LogIn.bind(this);
     this.LogOut = this.LogOut.bind(this);
@@ -54,44 +54,44 @@ class Home extends Component {
       username: "Username",
       password:"Password",
       showPword: false,
-      new_user: false, 
+      new_user: false,
       first: "First Name",
       last: "Last Name"
     }
   }
-  state = {
-    rate: 1,
-    volume: 0,
-    muted: false,
-    resizeMode: 'cover',
-    duration: 0.0,
-    currentTime: 0.0,
-    controls: false,
-    paused: true,
-    skin: 'custom',
-    ignoreSilentSwitch: null,
-    isBuffering: false,
-  };
+  // state = {
+  //   rate: 1,
+  //   volume: 0,
+  //   muted: false,
+  //   resizeMode: 'cover',
+  //   duration: 0.0,
+  //   currentTime: 0.0,
+  //   controls: false,
+  //   paused: true,
+  //   skin: 'custom',
+  //   ignoreSilentSwitch: null,
+  //   isBuffering: false,
+  // };
 
-  onLoad(data) {
-    console.log('On load fired!');
-    this.setState({duration: data.duration});
-  }
+  // onLoad(data) {
+  //   console.log('On load fired!');
+  //   this.setState({duration: data.duration});
+  // }
 
-  onProgress(data) {
-    this.setState({currentTime: data.currentTime});
-  }
+  // onProgress(data) {
+  //   this.setState({currentTime: data.currentTime});
+  // }
 
-  onBuffer({ isBuffering }: { isBuffering: boolean }) {
-    this.setState({ isBuffering });
-  }
+  // onBuffer({ isBuffering }: { isBuffering: boolean }) {
+  //   this.setState({ isBuffering });
+  // }
 
-  muteVolumeControl() {
-    this.setState({volume: 0});
-  }
-  unMuteVolumeControl() {
-    this.setState({volume: .15});
-  }
+  // muteVolumeControl() {
+  //   this.setState({volume: 0});
+  // }
+  // unMuteVolumeControl() {
+  //   this.setState({volume: .15});
+  // }
 
   navigate(route, props){
     //this.state.volume = 0;
@@ -117,7 +117,7 @@ class Home extends Component {
       }
 
       else
-        console.log('not')
+        console.log('user not recognized');
     });    
 }
   componentWillUnmount() {
@@ -140,32 +140,20 @@ class Home extends Component {
       method: 'POST',
       body: data_
       }) 
-      .then((response) => {console.log(response);})
-      .then(() => {
+      .then((response) => response.json())
+      .then((responseJson) => {
+        console.log("error is " + responseJson['error']);
+        if (responseJson['error'] != 'None'){
+          Alert.alert(responseJson['error']);
+        }
+        else{
           this.navigate('createHouse', this.state.username);
-        // this.props.navigator.push({
-        //   name: 'createHouse',
-        //   passProps: {
-        //     name:this.state.username
-        //   }
-        //})
-        //  this.navigate('createHouse', { username:this.state.username });
+        }
       })
       .catch((error) => {
         console.error(error);
       });
   }
-
-  // SignUp(){
-  //   firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
-  //     .then((user) => {
-  //       console.log('user created', user)
-  //       this.addNew(user);
-  //     })
-  //     .catch((err) => {
-  //       Alert.alert("Sorry, your username or password is wrong.")
-  //     });
-  // }
 
     // a block of code to cause a crash for crashlytics testing
     // console.log("starting crash");
@@ -177,14 +165,28 @@ class Home extends Component {
     // // Forces a native crash for testing
     // Crashlytics.crash();
   LogIn(){
-    var url = 'https://housemom-api.herokuapp.com/login/' + 
-     this.state.username + '/' + this.state.password
-    console.log("url:" + url);
-    return fetch(url)
-      .then((response) => {console.log(response);})
-      .then(() => {
-        this.navigate('dashboard', this.state.username);
-          
+
+    var data_ = new FormData();
+    data_.append('json', JSON.stringify({
+            'curr_username': this.state.username,
+            'curr_password': this.state.password
+    }));
+
+    return fetch('https://housemom-api.herokuapp.com/login', {
+      method: 'POST',
+      body: data_
+      }) 
+      .then((response) => response.json())
+      .then((responseJson) => {
+        console.log("In responseJson");
+        console.log(responseJson);
+        console.log("error is " + responseJson['error']);
+        if (responseJson['error'] != 'None'){
+          Alert.alert(responseJson['error']);
+        }
+        else{
+          this.navigate('dashboard', this.state.username);
+        }
       })
       .catch((error) => {
         console.error(error);

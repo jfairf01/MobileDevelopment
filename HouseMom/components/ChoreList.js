@@ -14,6 +14,7 @@ import {
   TouchableOpacity,
   Switch, //change to checkbox if you can update react-native to .49
   FlatList,
+  Alert
 } from 'react-native';
 
 import Chore from './Chore.js'
