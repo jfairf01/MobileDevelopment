@@ -18,6 +18,7 @@ import Chore from './Chore.js';
 import ChoreList from './ChoreList.js';
 
 
+
 class Dashboard extends Component {
   constructor(props){
     super(props);
@@ -79,6 +80,8 @@ getHousemates() {
   }
 
   toggleEdit(editing) {
+
+    
     this.setState({editMode: !editing});
   }
 
