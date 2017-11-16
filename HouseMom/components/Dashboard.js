@@ -22,6 +22,7 @@ import Chore from './Chore.js';
 var BASEURL = 'https://housemom-api.herokuapp.com/'//'https://8677390d.ngrok.io/';
 
 
+
 class Dashboard extends Component {
   constructor(props){
     super(props);
@@ -55,7 +56,7 @@ class Dashboard extends Component {
   }
 
 // getUsersChores() {
-//     return fetch('https://8677390d.ngrok.io/users')
+//     return fetch('https://housemom-api.herokuapp.com/users')
 //       .then((response) => response.json())
 //       .then((responseJson) => {
 //         this.setState({users: responseJson})})
@@ -71,6 +72,7 @@ getHousemates() {
   console.log("My username is " + myUsername);
   console.log("First let's find my house");
   var url = BASEURL + 'user/' + myUsername;
+  this.setState({myHouse: null, users: []});
   fetch(url)
     .then((response) => response.json())
     .then((responseJson) => {
@@ -105,8 +107,7 @@ getHousemates() {
                   Alert.alert(responseJson['error']);
                 }
                 else{
-                  this.setState({users: responseJson['successUsers']});
-                  this.setState({myHouse: responseJson});
+                  this.setState({myHouse: responseJson, users: responseJson['successUsers']});
                   console.log("The state.users is ");
                   console.log(this.state.users);
                 }
@@ -178,6 +179,8 @@ getHousemates() {
 
     var editButtonText = editMode ? "Done" : "Edit";
 
+    console.log("this.state.users before render is ");
+    console.log(this.state.users);
     if(this.state.users.length == 0){
       return(<View><Text> Loading... </Text></View>);
     }

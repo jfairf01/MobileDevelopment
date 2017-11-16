@@ -19,7 +19,7 @@
 
 // import Chore from './Chore.js'
 
-// var BASEURL = 'https://8677390d.ngrok.io';
+// var BASEURL = 'https://housemom-api.herokuapp.com';
 
 // class ChoreList extends Component {
 //   constructor(props){
