@@ -24,6 +24,7 @@ import RNFirebase from 'react-native-firebase';
 import CreateHouse from './CreateHouse';
 // import NewUser from './newUser';
 
+var BASEURL = 'https://7987a3a5.ngrok.io/';
 
 var Fabric = require('react-native-fabric');
 
@@ -103,7 +104,9 @@ class Home extends Component {
             'lastName': this.state.last
     }));
 
-    return fetch('https://housemom-api.herokuapp.com/new_user', {
+    var url = BASEURL + 'new_user';
+    console.log("Pinging url: " + url);
+    return fetch(url, {
       method: 'POST',
       body: data_
       }) 
@@ -139,7 +142,9 @@ class Home extends Component {
             'curr_password': this.state.password
     }));
 
-    return fetch('https://housemom-api.herokuapp.com/login', {
+    var url = BASEURL + 'login';
+    console.log("Pinging url: " + url);
+    return fetch(url, {
       method: 'POST',
       body: data_
       }) 
@@ -182,7 +187,7 @@ class Home extends Component {
   render() {
     newUser = null;
     if(this.state.new_user){
-      console.log("SHOW NEW INF")
+      // console.log("SHOW NEW INF")
       newUser = <View>
       <TextInput
           style={{height: 40, width: 200,borderColor: 'gray', borderWidth: 1, margin:10}}

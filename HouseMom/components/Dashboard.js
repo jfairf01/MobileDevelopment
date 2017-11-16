@@ -16,8 +16,9 @@ import {
 } from 'react-native';
 
 import Chore from './Chore.js';
-import ChoreList from './ChoreList.js';
+// import ChoreList from './ChoreList.js';
 
+var BASEURL = 'https://7987a3a5.ngrok.io/';
 
 
 class Dashboard extends Component {
@@ -68,7 +69,8 @@ getHousemates() {
   var myData;
   console.log("My username is " + myUsername);
   console.log("First let's find my house");
-  fetch('https://housemom-api.herokuapp.com/user/' + myUsername)
+  var url = BASEURL + 'user/' + myUsername;
+  fetch(url)
     .then((response) => response.json())
     .then((responseJson) => {
       console.log("My response to user is ")
@@ -90,44 +92,58 @@ getHousemates() {
           var name = this.props.name;
           console.log("My house name is ");
           console.log(myData['Houses'][0]);
-            return fetch('https://housemom-api.herokuapp.com/house/'+myData['Houses'][0])
+          var url = BASEURL + 'house/' + myData['Houses'][0];
+          console.log("Pinging url: " + url);
+            return fetch(url)
               .then((response) => response.json())
               .then((responseJson) => {
                 console.log("My house is ");
                 console.log(responseJson);
-                // this.state.users = responseJson['success']['Inhabitants'];
-
-                // var currUser = responseJson.filter(function(user){
-                //   return (user["Username"] == name); //change this to be dynamic
-                // });
-                // var house = currUser[0]["Houses"][0];
-
-                // var housemates = responseJson.filter(function(user){
-                //   return (user["Houses"][0] == house); //change this to be dynamic
-                // });
-                //var housemates = myhouse[0]["Inhabitants"];
-                console.log('got response')
-                this.setState({users: responseJson['success']['Inhabitants']});
-                this.setState({myHouse: responseJson});
+                console.log('got response');
+                if (responseJson['error'] != 'None'){
+                  Alert.alert(responseJson['error']);
+                }
+                else{
+                  this.setState({users: responseJson['successUsers']});
+                  this.setState({myHouse: responseJson});
+                  console.log("The state.users is ");
+                  console.log(this.state.users);
+                }
               })
               .catch((error) => {
                 console.error(error);
               });
+          }
         }
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
   toggleEdit(editing) {
     this.setState({editMode: !editing});
   }
 
-  // .filter(function(user){
-  //         return (user["Chores"].length > 0);
-  //       })
+  LogOut(){
+    var url = BASEURL + 'logout/' + this.props['name'];
+    console.log("Pinging url: " + url);
+    return fetch(url)
+      .then((response) => response.json())
+      .then((responseJson) => {
+        console.log("At least went into the response");
+        if (responseJson['error'] != 'None'){
+          Alert.alert(responseJson['error']);
+        }
+        else{
+          console.log("Logged Out successfully");
+          this.props.navigator.pop()
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
 
   render() {
     // console.log(this.state.users);
@@ -141,20 +157,16 @@ getHousemates() {
                     <FlatList style={styles.choreList}
                       keyExtractor={(item, index) => index}
                       data={this.state.users}
-                      renderItem={({item}) => <Chore housemate={item["First Name"]} username={item["Username"]} title={item["Chores"][0]} deadline="Thursday" edit={this.state.editMode} reload={this.getHousemates.bind(this)} navigator={this.props.navigator}></Chore>}
+                      renderItem={({item}) => <Chore housemate={item["First Name"]} username={item["Username"]} title={item["myChore"]} edit={this.state.editMode} reload={this.getHousemates.bind(this)} navigator={this.props.navigator}></Chore>}
                     ></FlatList>
                   </View>;
     } else {
-
-      const usersWithChores = this.state.users.filter(function(user){
-          return (user["Chores"].length > 0);
-        });
 
       choreList = <View>
                     <FlatList
                       keyExtractor={(item, index) => index}
                       data={this.state.users}
-                      renderItem={({item}) => <Chore housemate={item["First Name"]} username={item["Username"]} title={item["Chores"][0]} deadline="Thursday" edit={this.state.editMode} reload={this.getHousemates.bind(this)} navigator={this.props.navigator}
+                      renderItem={({item}) => <Chore housemate={item["First Name"]} username={item["Username"]} title={item["myChore"]} edit={this.state.editMode} reload={this.getHousemates.bind(this)} navigator={this.props.navigator}
                       ></Chore>}
                     ></FlatList>
                   </View>;
@@ -185,9 +197,9 @@ getHousemates() {
                   Refresh
                 </Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={()=>{this.homepage()}} style={styles.button}>
+              <TouchableOpacity onPress={()=>{this.LogOut()}} style={styles.button}>
                 <Text style={styles.buttonText}>
-                  Go Back
+                  Log Out
                 </Text>
               </TouchableOpacity>
             </View>

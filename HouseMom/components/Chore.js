@@ -19,6 +19,7 @@ import {
   Alert
 } from 'react-native';
 
+var BASEURL = 'https://7987a3a5.ngrok.io/';
 
 //need to update this to get 'checked' value from db
 class Chore extends Component {
@@ -38,8 +39,8 @@ class Chore extends Component {
   }
 
   componentWillMount(){
-    console.log("getting chores");
-    this.getChores();
+    console.log("getting chores from componentWillMount");
+    // this.getChores();
     console.log("chores are");
     console.log(this.state.chores);
   }
@@ -47,14 +48,20 @@ class Chore extends Component {
 
 
   getChores() {
-    console.log("chores get");
-    return fetch('https://housemom-api.herokuapp.com/chores')
+    console.log("in getChores");
+    var url = BASEURL + 'chores';
+    console.log("Pinging url: " + url);
+    return fetch(url)
       .then((response) => response.json())
       .then((responseJson) => {
         console.log("Response from getChores");
         console.log(responseJson);
-        this.setState({chores: responseJson['success']});
-        this.setState({isLoading: false});
+        if (responseJson['error'] != 'None'){
+          Alert.alert(responseJson['error']);
+        }
+        else{
+          this.setState({chores: responseJson['success'], isLoading: false});
+        }
       })
       .catch((error) => {
         console.error(error);
@@ -62,15 +69,20 @@ class Chore extends Component {
   }
 
   setChore() {
+    console.log("in setChore");
     this.setState({title: this.state.selectedChore});
     console.log(this.props);
-    var url = 'https://housemom-api.herokuapp.com/new_user_chore/' + this.state.selectedChore + "/" + this.props.username;
-    console.log("url:" + url);
+    var url = BASEURL + 'new_user_chore/' + this.state.selectedChore + "/" + this.props.username;
+    console.log("Pinging url: " + url);
     return fetch(url)
-      .then((response) => {console.log(response);})
-      .then(() => {
-        this.props.reload();
-        //update the dash ??
+      .then((response) => response.json())
+      .then((responseJson) => {
+        if (responseJson['error'] != 'None'){
+          Alert.alert(responseJson['error']);
+        }
+        else{
+          this.props.reload();
+        }
       })
       .catch((error) => {
         console.error(error);
@@ -78,12 +90,18 @@ class Chore extends Component {
   }
 
   addChore(input) {
-    var url = 'https://housemom-api.herokuapp.com/new_chore/' + input;
-    console.log("url:" + url);
+    console.log("in addChore");
+    var url = BASEURL + 'new_chore/' + input + '/' + this.props.username;
+    console.log("Pinging url: " + url);
     return fetch(url)
-      .then((response) => {console.log(response);})
-      .then(() => {
-        this.getChores();
+      .then((response) => response.json())
+      .then((responseJson) => {
+        if (responseJson['error'] != 'None'){
+          Alert.alert(responseJson['error']);
+        }
+        else{
+          this.getChores();
+        }
       })
       .catch((error) => {
         console.error(error);
@@ -97,12 +115,19 @@ class Chore extends Component {
 
     // This function will ping the API to say the person's chore is done
     if(this.state.checked){
-      var url = 'https://housemom-api.herokuapp.com/chore_done/' + this.state.title + "/" + this.props.username;
+      var url = BASEURL + 'chore_done/' + this.state.title + "/" + this.props.username;
+      console.log("Pinging url: " + url);
       fetch(url)
         .then((response) => response.json())
         .then((responseJson) => {
           console.log("My response for chore done is ");
           console.log(responseJson);
+          if (responseJson['error'] != 'None'){
+          Alert.alert(responseJson['error']);
+          }
+          else{
+            Alert.alert("Thank you for doing your chore :)");
+          }
         })
         .catch((error) => {
           console.error(error);
@@ -110,12 +135,20 @@ class Chore extends Component {
       }
     // This function will ping the API to tell the person to do their chore
     else{
-      var url = 'https://housemom-api.herokuapp.com/do_your_chore/' + this.state.title + "/" + this.props.username;
+      var url = BASEURL + 'do_your_chore/' + this.state.title + "/" + this.props.username;
+      console.log("Pinging url: " + url);
       fetch(url)
         .then((response) => response.json())
         .then((responseJson) => {
           console.log("My response for chore done is ");
           console.log(responseJson);
+          if (responseJson['error'] != 'None'){
+          Alert.alert(responseJson['error']);
+          }
+          else{
+            // TODO: Need to send a notification to the user who needs to do their chore
+            Alert.alert("We need to send a notification to this user");
+          }
         })
         .catch((error) => {
           console.error(error);
@@ -128,12 +161,19 @@ class Chore extends Component {
   nudge() {
     console.log(this.state);
     console.log(this.props);
-    var url = 'https://housemom-api.herokuapp.com/nudge/' + this.state.title +"/" + this.props.username;
-    console.log("url:" + url);
+    this.setState({checked:true});
+    var url = BASEURL + 'nudge/' + this.state.title +"/" + this.props.username;
+    console.log("Pinging url: " + url);
     return fetch(url)
-      .then((response) => {
-        console.log(response);
-        Alert.alert("You nudged " + this.props.housemate + "!")})
+      .then((response) => response.json())
+      .then((responseJson) => {
+        if (responseJson['error'] != 'None'){
+          Alert.alert(responseJson['error']);
+          }
+        else{
+          Alert.alert("You nudged " + this.props.housemate + "!")
+        }
+      })
       .catch((error) => {
         console.error(error);
       });
@@ -150,6 +190,8 @@ class Chore extends Component {
       console.log("It is not loading anymore");
       console.log("Our chores are");
       console.log(this.state.chores);
+      console.log("What's in my props?");
+      console.log(this.props);
       // this.getChores();
       // console.log("chores2 are");
       // console.log(this.state.chores);
@@ -173,12 +215,24 @@ class Chore extends Component {
       console.log("My chore list is ");
       console.log(this.state.choreList);
       
-
-      nudgeButton = <TouchableOpacity onPress={()=>{this.nudge()}} style={styles.button}>
-                  <Text style={styles.buttonText}>
-                    Nudge
-                  </Text>
-                </TouchableOpacity>;
+      // If the person is not assigned a chore, don't let them be nudged or switched
+      if (this.state.title == "None"){
+        nudgeButton = <TouchableOpacity disabled={true} style={styles.button}>
+                    <Text style={styles.buttonText}>
+                      Nudge
+                    </Text>
+                  </TouchableOpacity>;
+        switchButton = <Switch disabled={true}/>;
+      }
+      // Otherwise let them be nudged and switched
+      else{
+        nudgeButton = <TouchableOpacity onPress={()=>{this.nudge()}} style={styles.button}>
+                    <Text style={styles.buttonText}>
+                      Nudge
+                    </Text>
+                  </TouchableOpacity>;
+        switchButton = <Switch onValueChange={(value)=>this.choreCompleted(value)} value={this.state.checked} />;
+      }
 
       changeButton = <TouchableOpacity onPress={() => {this.setState({modalVisible: true})}} style={styles.button}>
                   <Text style={styles.buttonText}>
@@ -198,7 +252,7 @@ class Chore extends Component {
             >
            <View style={{marginTop: 22}}>
             <View>
-              <Text> Assign a chore to {this.props.housemate}. Her current chore is {this.props.title} </Text>
+              <Text> Assign a chore to {this.props.housemate}. Their current chore is {this.props.title} </Text>
               <Text>Choose from the list:</Text>
               <Picker
                      mode="dialog"
@@ -219,7 +273,7 @@ class Chore extends Component {
                 onChangeText={(text) => this.setState({text})}
                 value={this.state.text}
               ></TextInput>
-              <TouchableOpacity onPress={() => {this.addChore(this.state.text)}} style={styles.button}>
+              <TouchableOpacity onPress={() => {this.addChore(this.state.text); this.setState({modalVisible: false});}} style={styles.button}>
                   <Text style={styles.buttonText}>
                     Add
                   </Text>
@@ -235,7 +289,7 @@ class Chore extends Component {
            </View>
           </Modal>
 
-            <Switch onValueChange={(value)=>this.choreCompleted(value)} value={this.state.checked} />
+            {switchButton}
             <Text style={styles.choreName}>
               {this.props.housemate}
             </Text>

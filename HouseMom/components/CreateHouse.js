@@ -20,6 +20,8 @@ import {
   Alert
 } from 'react-native';
 
+var BASEURL = 'https://7987a3a5.ngrok.io/';
+
 //need to update this to get 'checked' value from db
 class CreateHouse extends Component {
   constructor(props){
@@ -46,8 +48,8 @@ class CreateHouse extends Component {
     console.log("joinHouse Function");
     console.log(this.props.name);
     console.log(this.state.houseName)
-    var url = 'https://housemom-api.herokuapp.com/new_house_user/' + this.props.name + "/" + this.state.houseName;
-    console.log("url:" + url);
+    var url = BASEURL + 'new_house_user/' + this.props.name + "/" + this.state.houseName;
+    console.log("Pinging url: " + url);
     return fetch(url)
       .then((response) => response.json())
       .then((responseJson) => {
@@ -81,8 +83,8 @@ class CreateHouse extends Component {
 // Crashlytics.crash();
 
     console.log("House name is " + this.state.houseName);
-    var url = 'https://housemom-api.herokuapp.com/new_house/'  + this.state.houseName + "/" + this.props.name;
-    console.log("url:" + url);
+    var url = BASEURL + 'new_house/'  + this.state.houseName + "/" + this.props.name;
+    console.log("Pinging url: " + url);
     return fetch(url)
       .then((response) => response.json())
       .then((responseJson) => {
@@ -104,9 +106,9 @@ class CreateHouse extends Component {
     return(
       <View>
 
-        <TextInput placeholder = "New House Name" placeholderTextColor = "#808080" onChangeText={(houseName) => this.setState({houseName})}/>
-        <Button title="Join House" onPress={this.joinHouse}>  </Button>
         <TextInput placeholder = "Existing House Name" placeholderTextColor = "#808080" onChangeText={(houseName) => this.setState({houseName})}/>
+        <Button title="Join House" onPress={this.joinHouse}>  </Button>
+        <TextInput placeholder = "New House Name" placeholderTextColor = "#808080" onChangeText={(houseName) => this.setState({houseName})}/>
         <Button title="Create House" onPress={this.createHouse}>  </Button>
     </View>
     );
