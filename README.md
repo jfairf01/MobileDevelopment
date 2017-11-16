@@ -160,3 +160,33 @@ We sacrificed usability to get functionality up and running in a time crunch, so
 
 We are currently trying to figure out how to connect our two databases -- while Firebase makes authentication very easy, the rest of our data is in a different database, so fetching data and communicating between those is a challenge. However, we have a workaround, where we use the initial Firebase database to log in, and our Web API for everything else. This is almost complete, and will hopefully be merged into Alpha this week. 
 
+
+# Entry 6: November 9th, 2017
+
+### Overview
+We once again divided up the work between the three of us: 
+Claudia: Lint Testing
+Sara: Crashlytics
+Johnny: Unit Testing and Analysis on Web API
+
+### Lint Testing
+The majority of our lint bugs were found in code that we had not directly written, but came with the react-native app that we created. There were four categories of warnings: 
+DefaultLocale: implied default locale in case conversion
+This was handled by importing locale, and specifying to be in the US
+GradleDependency: Obsolete Gradle Dependency
+This is a product of the fact that we are using Android version 6, and thus our dependencies are not the newest. To handle this error, I edited the gradle.build file to suppress this error. 
+Registered: Class not registered in the manifest
+This was two packages that were downloaded with firebase -- to address them, I made the classes abstract. This means that they did not need to be registered in the manifest. 
+GradleDynamicVersion: Gradle Dynamic Version
+We originally had the line: compile 'com.facebook.react:react-native:+' in one of our build.gradle files. Using the + can lead to strange bugs and errors, so I fixed this error by hardcoding the version number.
+
+
+
+### Crashlytics Testing
+We set up crashlytics to track crashes and find their causes. To install crashlytics, we followed the steps at [this blog post](https://medium.com/komenco/beta-testing-your-react-native-android-application-with-crashlytics-483c7e66a423) and installed [react-native-fabric](https://github.com/corymsmith/react-native-fabric).
+
+For future reference, the blog post shows several useful steps including how to generate a signed certificate and how to create a release build. And the command `react-native run-android --variant=release` installs a release build on the Android SDK.
+
+We created a test crash using crashlytics and confirmed that it’s properly installed.
+
+
