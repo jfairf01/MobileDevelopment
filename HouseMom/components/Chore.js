@@ -19,7 +19,7 @@ import {
   Alert
 } from 'react-native';
 
-var BASEURL = 'https://8677390d.ngrok.io/';
+var BASEURL = 'https://housemom-api.herokuapp.com/';
 
 //need to update this to get 'checked' value from db
 class Chore extends Component {
@@ -50,7 +50,7 @@ class Chore extends Component {
   getChores() {
     console.log('GETTING CHORES')
     console.log(this.props.house)
-    this.setState({chores: this.props.house.houseChores, isLoading: false, firstLoad:true, choreList:[]})
+    this.setState({chores: this.props.house['houseChores'], isLoading: false, firstLoad:true, choreList:[]})
     // console.log("in getChores");
     // var url = BASEURL + 'chores';
     // console.log("Pinging url: " + url);
@@ -103,6 +103,7 @@ class Chore extends Component {
           Alert.alert(responseJson['error']);
         }
         else{
+          this.setState({firstLoad: true});
           this.props.reload();
           this.getChores();
         }
