@@ -19,7 +19,7 @@ import {
   Alert
 } from 'react-native';
 
-var BASEURL = 'https://7987a3a5.ngrok.io/';
+var BASEURL = 'https://8677390d.ngrok.io/';
 
 //need to update this to get 'checked' value from db
 class Chore extends Component {
@@ -35,12 +35,12 @@ class Chore extends Component {
       choreList: [],
       firstLoad: true
     };
-    this.getChores();
+    // this.getChores();
   }
 
   componentWillMount(){
     console.log("getting chores from componentWillMount");
-    // this.getChores();
+    this.getChores();
     console.log("chores are");
     console.log(this.state.chores);
   }
@@ -48,24 +48,27 @@ class Chore extends Component {
 
 
   getChores() {
-    console.log("in getChores");
-    var url = BASEURL + 'chores';
-    console.log("Pinging url: " + url);
-    return fetch(url)
-      .then((response) => response.json())
-      .then((responseJson) => {
-        console.log("Response from getChores");
-        console.log(responseJson);
-        if (responseJson['error'] != 'None'){
-          Alert.alert(responseJson['error']);
-        }
-        else{
-          this.setState({chores: responseJson['success'], isLoading: false});
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    console.log('GETTING CHORES')
+    console.log(this.props.house)
+    this.setState({chores: this.props.house.houseChores, isLoading: false, firstLoad:true, choreList:[]})
+    // console.log("in getChores");
+    // var url = BASEURL + 'chores';
+    // console.log("Pinging url: " + url);
+    // return fetch(url)
+    //   .then((response) => response.json())
+    //   .then((responseJson) => {
+    //     console.log("Response from getChores");
+    //     console.log(responseJson);
+    //     if (responseJson['error'] != 'None'){
+    //       Alert.alert(responseJson['error']);
+    //     }
+    //     else{
+    //       this.setState({chores: responseJson['success'], isLoading: false});
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.error(error);
+    //   });
   }
 
   setChore() {
@@ -100,6 +103,7 @@ class Chore extends Component {
           Alert.alert(responseJson['error']);
         }
         else{
+          this.props.reload();
           this.getChores();
         }
       })
@@ -198,6 +202,7 @@ class Chore extends Component {
 
       // var myButtons;
       if (this.state.firstLoad){
+        console.log('IN FIRST LOAD');
         // Push the person's current chore first
         for (var i=0; i < this.state.chores.length; i++){
           if(this.state.chores[i] == this.state.title){ 
@@ -217,7 +222,7 @@ class Chore extends Component {
       
       // If the person is not assigned a chore, don't let them be nudged or switched
       if (this.state.title == "None"){
-        nudgeButton = <TouchableOpacity disabled={true} style={styles.button}>
+        nudgeButton = <TouchableOpacity disabled={true} style={styles.rightButton}>
                     <Text style={styles.buttonText}>
                       Nudge
                     </Text>
@@ -226,7 +231,7 @@ class Chore extends Component {
       }
       // Otherwise let them be nudged and switched
       else{
-        nudgeButton = <TouchableOpacity onPress={()=>{this.nudge()}} style={styles.button}>
+        nudgeButton = <TouchableOpacity onPress={()=>{this.nudge()}} style={styles.rightButton}>
                     <Text style={styles.buttonText}>
                       Nudge
                     </Text>
@@ -234,7 +239,7 @@ class Chore extends Component {
         switchButton = <Switch onValueChange={(value)=>this.choreCompleted(value)} value={this.state.checked} />;
       }
 
-      changeButton = <TouchableOpacity onPress={() => {this.setState({modalVisible: true})}} style={styles.button}>
+      changeButton = <TouchableOpacity onPress={() => {this.setState({modalVisible: true})}} style={styles.rightButton}>
                   <Text style={styles.buttonText}>
                     Change
                   </Text>
@@ -336,6 +341,16 @@ const styles = StyleSheet.create({
   button: {
     marginRight:20,
     marginLeft:20,
+    paddingTop:10,
+    paddingBottom:10,
+    backgroundColor:'#68a0cf',
+    borderRadius:10,
+    borderWidth: 1,
+    borderColor: '#fff'
+  },
+  rightButton: {
+    alignSelf: 'flex-end',
+    marginLeft: 5,
     paddingTop:10,
     paddingBottom:10,
     backgroundColor:'#68a0cf',

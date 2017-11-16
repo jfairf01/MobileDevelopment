@@ -18,7 +18,7 @@ import {
 import Chore from './Chore.js';
 // import ChoreList from './ChoreList.js';
 
-var BASEURL = 'https://7987a3a5.ngrok.io/';
+var BASEURL = 'https://8677390d.ngrok.io/';
 
 
 class Dashboard extends Component {
@@ -54,7 +54,7 @@ class Dashboard extends Component {
   }
 
 // getUsersChores() {
-//     return fetch('https://housemom-api.herokuapp.com/users')
+//     return fetch('https://8677390d.ngrok.io/users')
 //       .then((response) => response.json())
 //       .then((responseJson) => {
 //         this.setState({users: responseJson})})
@@ -157,19 +157,22 @@ getHousemates() {
                     <FlatList style={styles.choreList}
                       keyExtractor={(item, index) => index}
                       data={this.state.users}
-                      renderItem={({item}) => <Chore housemate={item["First Name"]} username={item["Username"]} title={item["myChore"]} edit={this.state.editMode} reload={this.getHousemates.bind(this)} navigator={this.props.navigator}></Chore>}
+                      renderItem={({item}) => <Chore house={this.state.myHouse} housemate={item["First Name"]} username={item["Username"]} title={item["myChore"]} edit={this.state.editMode} reload={this.getHousemates} navigator={this.props.navigator}></Chore>}
                     ></FlatList>
                   </View>;
-    } else {
+    } else if (this.state.myHouse != null){
 
       choreList = <View>
                     <FlatList
                       keyExtractor={(item, index) => index}
                       data={this.state.users}
-                      renderItem={({item}) => <Chore housemate={item["First Name"]} username={item["Username"]} title={item["myChore"]} edit={this.state.editMode} reload={this.getHousemates.bind(this)} navigator={this.props.navigator}
+                      renderItem={({item}) => <Chore house={this.state.myHouse} housemate={item["First Name"]} username={item["Username"]} title={item["myChore"]} edit={this.state.editMode} reload={this.getHousemates} navigator={this.props.navigator}
                       ></Chore>}
                     ></FlatList>
                   </View>;
+    }
+    else{
+      return(<View><Text> Loading... </Text></View>);
     }
 
     var editButtonText = editMode ? "Done" : "Edit";
@@ -180,8 +183,8 @@ getHousemates() {
     else{
     return(
       <View style={styles.container}>
-
-        <Text style={styles.headerText}>Chore Chart</Text>
+        <Text style={styles.headerText}>{this.state.myHouse['successName']}</Text>
+        <Text style={styles.subHeaderText}>Chore Chart</Text>
         <View>
           {choreList}
         </View>
@@ -227,6 +230,11 @@ const styles = StyleSheet.create({
     fontSize: 40,
     color: 'black',
     marginTop: 20
+  },
+  subHeaderText: {
+    fontSize: 32,
+    color: 'black',
+    marginTop: 0
   },
   button: {
     marginRight:20,
