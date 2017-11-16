@@ -19,7 +19,7 @@ import {
   Alert
 } from 'react-native';
 
-var BASEURL = 'https://8677390d.ngrok.io/';
+var BASEURL = 'https://housemom-api.herokuapp.com/' ///'https://8677390d.ngrok.io/';
 
 //need to update this to get 'checked' value from db
 class Chore extends Component {
@@ -231,7 +231,7 @@ class Chore extends Component {
       }
       // Otherwise let them be nudged and switched
       else{
-        nudgeButton = <TouchableOpacity onPress={()=>{this.nudge()}} style={styles.rightButton}>
+        nudgeButton = <TouchableOpacity onPress={()=>{this.nudge()}} style={styles.nudgeButton}>
                     <Text style={styles.buttonText}>
                       Nudge
                     </Text>
@@ -239,14 +239,15 @@ class Chore extends Component {
         switchButton = <Switch onValueChange={(value)=>this.choreCompleted(value)} value={this.state.checked} />;
       }
 
-      changeButton = <TouchableOpacity onPress={() => {this.setState({modalVisible: true})}} style={styles.rightButton}>
+      changeButton = <TouchableOpacity onPress={() => {this.setState({modalVisible: true})}} style={styles.changeButton}>
                   <Text style={styles.buttonText}>
                     Change
                   </Text>
                 </TouchableOpacity>;
 
       sideButton = this.props.edit ? changeButton : nudgeButton;
-
+      var name = this.props.housemate.substring(0,12);
+      var chore = this.props.title.substring(0,12);
       return(
         <View style={styles.choreRow}>
           <Modal
@@ -257,8 +258,9 @@ class Chore extends Component {
             >
            <View style={{marginTop: 22}}>
             <View>
-              <Text> Assign a chore to {this.props.housemate}. Their current chore is {this.props.title} </Text>
-              <Text>Choose from the list:</Text>
+              <Text style={{textAlign:'center', fontSize: 24}}> Edit Chores </Text>
+              <Text style={styles.heading}> Assign a chore to {this.props.housemate}. Their current chore is {this.props.title} </Text>
+              <Text style={{fontSize: 20, marginTop:10, textAlign:'center',marginLeft:20}}>Choose from the list:</Text>
               <Picker
                      mode="dialog"
                      prompt="Pick a chore"
@@ -271,10 +273,10 @@ class Chore extends Component {
                     Assign
                   </Text>
                 </TouchableOpacity>
-
-              <Text>Or add a chore:</Text>
+            <View style={{marginTop:22}}>
+              <Text style={{fontSize: 20, marginTop:10, textAlign:'center',marginLeft:20}}>Or add a chore:</Text>
               <TextInput
-                style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+                style={{height: 40, borderColor: 'gray', borderWidth: 1, marginLeft:20, marginRight:20}}
                 onChangeText={(text) => this.setState({text})}
                 value={this.state.text}
               ></TextInput>
@@ -289,6 +291,7 @@ class Chore extends Component {
                     Done
                   </Text>
                 </TouchableOpacity>
+              </View>
 
             </View>
            </View>
@@ -296,10 +299,10 @@ class Chore extends Component {
 
             {switchButton}
             <Text style={styles.choreName}>
-              {this.props.housemate}
+              {name}
             </Text>
             <View style={styles.choreDetails}>
-              <Text style={styles.choreTitle}>{this.props.title}</Text>
+              <Text style={styles.choreTitle}>{chore}</Text>
             </View>
             {sideButton}
       </View>
@@ -318,6 +321,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 50,
     margin: 10,
+  },
+  heading:{
+    fontSize: 20,
+    textAlign: 'center'
   },
   choreName: {
     fontWeight: 'bold',
@@ -348,12 +355,22 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#fff'
   },
-  rightButton: {
+  nudgeButton: {
     alignSelf: 'flex-end',
     marginLeft: 5,
     paddingTop:10,
     paddingBottom:10,
     backgroundColor:'#68a0cf',
+    borderRadius:10,
+    borderWidth: 1,
+    borderColor: '#fff'
+  },
+  changeButton: {
+    alignSelf: 'flex-end',
+    marginLeft: 5,
+    paddingTop:10,
+    paddingBottom:10,
+    backgroundColor:'#3CB371',
     borderRadius:10,
     borderWidth: 1,
     borderColor: '#fff'

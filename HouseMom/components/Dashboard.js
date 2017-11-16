@@ -12,13 +12,14 @@ import {
   TouchableOpacity,
   CheckBox,
   FlatList,
-  Alert
+  Alert,
+  ScrollView
 } from 'react-native';
 
 import Chore from './Chore.js';
 // import ChoreList from './ChoreList.js';
 
-var BASEURL = 'https://8677390d.ngrok.io/';
+var BASEURL = 'https://housemom-api.herokuapp.com/'//'https://8677390d.ngrok.io/';
 
 
 class Dashboard extends Component {
@@ -153,23 +154,23 @@ getHousemates() {
     let choreList = null;
     
     if (editMode) {
-      choreList = <View>
+      choreList = 
                     <FlatList style={styles.choreList}
                       keyExtractor={(item, index) => index}
                       data={this.state.users}
                       renderItem={({item}) => <Chore house={this.state.myHouse} housemate={item["First Name"]} username={item["Username"]} title={item["myChore"]} edit={this.state.editMode} reload={this.getHousemates} navigator={this.props.navigator}></Chore>}
                     ></FlatList>
-                  </View>;
     } else if (this.state.myHouse != null){
 
-      choreList = <View>
+      choreList =
+
                     <FlatList
                       keyExtractor={(item, index) => index}
                       data={this.state.users}
                       renderItem={({item}) => <Chore house={this.state.myHouse} housemate={item["First Name"]} username={item["Username"]} title={item["myChore"]} edit={this.state.editMode} reload={this.getHousemates} navigator={this.props.navigator}
                       ></Chore>}
                     ></FlatList>
-                  </View>;
+;
     }
     else{
       return(<View><Text> Loading... </Text></View>);
@@ -182,32 +183,32 @@ getHousemates() {
     }
     else{
     return(
-      <View style={styles.container}>
-        <Text style={styles.headerText}>{this.state.myHouse['successName']}</Text>
-        <Text style={styles.subHeaderText}>Chore Chart</Text>
-        <View>
-          {choreList}
+        <View style={styles.container}>
+          <Text style={styles.headerText}>{this.state.myHouse['successName']}</Text>
+          <Text style={styles.subHeaderText}>Chore Chart</Text>
+          <View style={styles.scroll}>
+            {choreList}
+          </View>
+          <View style={styles.controls}>
+              <View style={styles.resizeModeControl}>
+              <TouchableOpacity onPress={()=>{this.toggleEdit(editMode)}} style={styles.button}>
+                  <Text style={styles.buttonText}>
+                    {editButtonText}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={()=>{this.getHousemates()}} style={styles.button}>
+                  <Text style={styles.buttonText}>
+                    Refresh
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={()=>{this.LogOut()}} style={styles.button}>
+                  <Text style={styles.buttonText}>
+                    Log Out
+                  </Text>
+                </TouchableOpacity>
+              </View>
+          </View>
         </View>
-        <View style={styles.controls}>
-            <View style={styles.resizeModeControl}>
-            <TouchableOpacity onPress={()=>{this.toggleEdit(editMode)}} style={styles.button}>
-                <Text style={styles.buttonText}>
-                  {editButtonText}
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={()=>{this.getHousemates()}} style={styles.button}>
-                <Text style={styles.buttonText}>
-                  Refresh
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={()=>{this.LogOut()}} style={styles.button}>
-                <Text style={styles.buttonText}>
-                  Log Out
-                </Text>
-              </TouchableOpacity>
-            </View>
-        </View>
-      </View>
       );
     }
   }
@@ -219,12 +220,18 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'flex-start',
     alignItems: 'center',
+    alignContent: 'space-between',
     backgroundColor: 'white',
   },
+  scroll: {
+    marginBottom:90,
+    top:20,
+    flex:1,
+  },
   choreList: {
-    paddingBottom: 50,
-    height: 480,
-    flexGrow: 0
+    //paddingBottom: 50,
+    //height: 480,
+    //flexGrow: 0
   },
   headerText: {
     fontSize: 40,
@@ -244,7 +251,7 @@ const styles = StyleSheet.create({
     backgroundColor:'#68a0cf',
     borderRadius:10,
     borderWidth: 1,
-    borderColor: '#fff'
+    borderColor: '#fff',
   },
   buttonText: {
     marginLeft: 20, 
@@ -255,9 +262,10 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     borderRadius: 5,
     position: 'absolute',
-    bottom: 44,
+    bottom: 20,
     left: 4,
     right: 4,
+    marginTop:20
   },
   resizeModeControl: {
     flex: 1,
