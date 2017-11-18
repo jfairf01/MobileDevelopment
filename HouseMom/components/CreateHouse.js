@@ -47,12 +47,20 @@ class CreateHouse extends Component {
 
 
   joinHouse(){
-    console.log("joinHouse Function");
-    console.log(this.props.name);
-    console.log(this.state.houseName)
-    var url = BASEURL + 'new_house_user/' + this.props.name + "/" + this.state.houseName + "/" + this.state.passcode;
+
+    var url = BASEURL + 'new_house_user/';  
+    var data_ = new FormData();
+    data_.append('json', JSON.stringify({
+            'username': this.props.name,
+            'houseName': this.state.houseName,
+            'passcode': this.state.passcode,
+    }));
+
     console.log("Pinging url: " + url);
-    return fetch(url)
+    return fetch(url, {
+        method: 'POST',
+        body: data_
+      }) 
       .then((response) => response.json())
       .then((responseJson) => {
         console.log("error is " + responseJson['error']);
@@ -85,9 +93,19 @@ class CreateHouse extends Component {
 // Crashlytics.crash();
 
     console.log("House name is " + this.state.houseName);
-    var url = BASEURL + 'new_house/'  + this.state.houseName + "/" + this.props.name  + "/" + this.state.passcode;
+    var url = BASEURL + 'new_house/';
+    var data_ = new FormData();
+    data_.append('json', JSON.stringify({
+            'username': this.props.name,
+            'houseName': this.state.houseName,
+            'passcode': this.state.passcode,
+    }));
+
     console.log("Pinging url: " + url);
-    return fetch(url)
+    return fetch(url, {
+        method: 'POST',
+        body: data_
+      }) 
       .then((response) => response.json())
       .then((responseJson) => {
         console.log("error is " + responseJson['error']);
