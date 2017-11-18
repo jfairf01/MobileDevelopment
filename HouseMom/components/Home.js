@@ -247,6 +247,7 @@ class Home extends Component {
         <TextInput   style={{height: 40, width: 200,borderColor: 'gray', borderWidth: 1, margin:10}}
           onChangeText={(password) => this.setState({password})}
           value={this.state.password}
+          secureTextEntry = {true}
         />
           {loginButton}
           <TouchableOpacity style={styles.authButtons} onPress={this.setNew}>

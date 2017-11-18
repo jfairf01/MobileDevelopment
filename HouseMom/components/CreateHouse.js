@@ -28,7 +28,8 @@ class CreateHouse extends Component {
   constructor(props){
     super(props);
     this.state = {
-      houseName:""
+      houseName:"", 
+      passcode:""
     };
     this.navigate = this.navigate.bind(this);
     this.joinHouse = this.joinHouse.bind(this);
@@ -49,7 +50,7 @@ class CreateHouse extends Component {
     console.log("joinHouse Function");
     console.log(this.props.name);
     console.log(this.state.houseName)
-    var url = BASEURL + 'new_house_user/' + this.props.name + "/" + this.state.houseName;
+    var url = BASEURL + 'new_house_user/' + this.props.name + "/" + this.state.houseName + "/" + this.state.passcode;
     console.log("Pinging url: " + url);
     return fetch(url)
       .then((response) => response.json())
@@ -84,7 +85,7 @@ class CreateHouse extends Component {
 // Crashlytics.crash();
 
     console.log("House name is " + this.state.houseName);
-    var url = BASEURL + 'new_house/'  + this.state.houseName + "/" + this.props.name;
+    var url = BASEURL + 'new_house/'  + this.state.houseName + "/" + this.props.name  + "/" + this.state.passcode;
     console.log("Pinging url: " + url);
     return fetch(url)
       .then((response) => response.json())
@@ -106,12 +107,16 @@ class CreateHouse extends Component {
     console.log(this.props)
     return(
       <View>
-
-        <TextInput placeholder = "Existing House Name" placeholderTextColor = "#808080" onChangeText={(houseName) => this.setState({houseName})}/>
-        <Button title="Join House" onPress={this.joinHouse}>  </Button>
-        <TextInput placeholder = "New House Name" placeholderTextColor = "#808080" onChangeText={(houseName) => this.setState({houseName})}/>
-        <Button title="Create House" onPress={this.createHouse}>  </Button>
-    </View>
+        <Text style={styles.heading}> Either Join an Existing House </Text>
+          <TextInput placeholder = "Existing House Name" placeholderTextColor = "#808080" onChangeText={(houseName) => this.setState({houseName})}/>
+          <TextInput placeholder = "Passcode" placeholderTextColor = "#808080" onChangeText={(passcode) => this.setState({passcode})}/>
+          <Button title="Join House" onPress={this.joinHouse}>  </Button>
+        <Text style={styles.heading}> Or Create a New House </Text> 
+          <TextInput placeholder = "New House Name" placeholderTextColor = "#808080" onChangeText={(houseName) => this.setState({houseName})}/>
+          <TextInput placeholder = "Enter a Passcode for Your House" placeholderTextColor = "#808080" onChangeText={(passcode) => this.setState({passcode})}/>
+          <Text style={{textAlign: 'center', marginLeft:5, marginRight:5}}> Give this passcode to your housemates so they can join your house! </Text>
+          <Button title="Create House" onPress={this.createHouse}>  </Button>
+      </View>
     );
   }
 }
@@ -161,6 +166,11 @@ const styles = StyleSheet.create({
     marginRight: 20, 
     color: 'white'
   },
+  heading:{
+    textAlign: 'center',
+    fontSize: 20,
+    marginTop: 16
+  }
 });
 
 export default CreateHouse
