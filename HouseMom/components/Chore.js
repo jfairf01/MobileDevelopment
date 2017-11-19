@@ -15,9 +15,10 @@ import {
   FlatList,
   Picker,
   TextInput,
-  Switch, //change to checkbox if you can update react-native to .49
   Alert
 } from 'react-native';
+
+import CheckBox from 'react-native-check-box';
 
 var BASEURL = 'https://housemom-api.herokuapp.com/' ///'https://8677390d.ngrok.io/';
 //need to update this to get 'checked' value from db
@@ -227,7 +228,7 @@ class Chore extends Component {
                       Nudge
                     </Text>
                   </TouchableOpacity>;
-        switchButton = <Switch disabled={true}/>;
+        switchButton = <CheckBox disabled={true}/>;
       }
       // Otherwise let them be nudged and switched
       else{
@@ -236,7 +237,8 @@ class Chore extends Component {
                       Nudge
                     </Text>
                   </TouchableOpacity>;
-        switchButton = <Switch onValueChange={(value)=>this.choreCompleted(value)} value={this.state.checked} />;
+        switchButton = <CheckBox isChecked={this.state.checked} onClick={(value)=>this.choreCompleted(value)} />;
+
       }
 
       changeButton = <TouchableOpacity onPress={() => {this.setState({modalVisible: true})}} style={styles.changeButton}>
