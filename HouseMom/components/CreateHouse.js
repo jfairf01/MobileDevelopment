@@ -48,23 +48,23 @@ class CreateHouse extends Component {
 
   joinHouse(){
 
-    var url = BASEURL + 'new_house_user/';  
+    var url = BASEURL + 'new_house_user';  
     var data_ = new FormData();
     data_.append('json', JSON.stringify({
-            'username': this.props.name,
             'houseName': this.state.houseName,
-            'passcode': this.state.passcode,
+            'userName': this.props.name,
+            'housePassword': this.state.passcode,
     }));
     console.log(url)
     console.log(data_)
-    //console.log("Pinging url: " + url);
+    console.log("Pinging url: " + url);
     return fetch(url, {
         method: 'POST',
         body: data_
       }) 
       .then((response) => response.json())
       .then((responseJson) => {
-        //console.log("error is " + responseJson['error']);
+        console.log("error is " + responseJson['error']);
         if (responseJson['error'] != 'None'){
           Alert.alert(responseJson['error']);
         }
@@ -93,23 +93,23 @@ class CreateHouse extends Component {
 // // Forces a native crash for testing
 // Crashlytics.crash();
 
-    //console.log("House name is " + this.state.houseName);
-    var url = BASEURL + 'new_house/';
+    console.log("House name is " + this.state.houseName);
+    var url = BASEURL + 'new_house';
     var data_ = new FormData();
     data_.append('json', JSON.stringify({
-            'username': this.props.name,
             'houseName': this.state.houseName,
-            'passcode': this.state.passcode,
+            'userName': this.props.name,
+            'housePassword': this.state.passcode,
     }));
 
-    //console.log("Pinging url: " + url);
+    console.log("Pinging url: " + url);
     return fetch(url, {
         method: 'POST',
         body: data_
       }) 
       .then((response) => response.json())
       .then((responseJson) => {
-        //console.log("error is " + responseJson['error']);
+        console.log("error is " + responseJson['error']);
         if (responseJson['error'] != 'None'){
           Alert.alert(responseJson['error']);
         }

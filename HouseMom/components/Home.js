@@ -97,6 +97,7 @@ class Home extends Component {
 
   addNew(user){
     //console.log(user);
+    console.log('new user')
     var data_ = new FormData();
     data_.append('json', JSON.stringify({
             'new_username': this.state.username,
@@ -106,6 +107,7 @@ class Home extends Component {
     }));
 
     var url = BASEURL + 'new_user';
+    console.log(url)
     //console.log("Pinging url: " + url);
     return fetch(url, {
       method: 'POST',
@@ -113,7 +115,7 @@ class Home extends Component {
       }) 
       .then((response) => response.json())
       .then((responseJson) => {
-        //console.log("error is " + responseJson['error']);
+        console.log("error is " + responseJson['error']);
         if (responseJson['error'] != 'None'){
           Alert.alert(responseJson['error']);
         }
@@ -122,6 +124,7 @@ class Home extends Component {
         }
       })
       .catch((error) => {
+        console.log('YIKES')
         console.error(error);
       });
   }
