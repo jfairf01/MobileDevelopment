@@ -1,0 +1,32 @@
+{
+	"name": "HouseMom",
+	"version": "0.0.1",
+	"private": true,
+	"scripts": {
+		"start": "node node_modules/react-native/local-cli/cli.js start",
+		"test": "jest"
+	},
+	"dependencies": {
+		"lint": "^1.1.2",
+		"prop-types": "^15.6.0",
+		"react": "16.0.0-alpha.6",
+		"react-native": "0.44.0",
+		"react-native-check-box": "^2.0.2",
+		"react-native-deprecated-custom-components": "^0.1.1",
+		"react-native-fabric": "^0.5.1",
+		"react-native-fbsdk": "^0.6.1",
+		"react-native-firebase": "^2.2.3",
+		"react-native-icon": "^0.2.10",
+		"react-native-video": "^2.0.0",
+		"react-navigation": "^1.0.0-beta.19"
+	},
+	"devDependencies": {
+		"babel-jest": "21.2.0",
+		"babel-preset-react-native": "4.0.0",
+		"jest": "21.2.1",
+		"react-test-renderer": "16.0.0-alpha.6"
+	},
+	"jest": {
+		"preset": "react-native"
+	}
+}

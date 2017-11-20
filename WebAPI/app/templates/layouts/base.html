@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+      <br/>
+        {# When extended, the content block contains all the html of the webpage #}
+        {% block content %}
+        {% endblock %}
+
+        {# Implement CSRF protection for site #}
+        {% if csrf_token()|safe %}
+            <div style="visibility: hidden; display: none">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token()|safe }}">
+            </div>
+        {% endif %}
+          <style>
+  body {
+    background-color:#009CEB;
+  }
+  </style>
+    </body>
+</html>
