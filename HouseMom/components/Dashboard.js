@@ -66,50 +66,50 @@ class Dashboard extends Component {
 //   }
 
 getHousemates() {
-  console.log("getHousemates function");
+ // console.log("getHousemates function");
   var myUsername = this.props['name'];
   var myData;
-  console.log("My username is " + myUsername);
-  console.log("First let's find my house");
+  // console.log("My username is " + myUsername);
+  // console.log("First let's find my house");
   var url = BASEURL + 'user/' + myUsername;
   this.setState({myHouse: null, users: []});
   fetch(url)
     .then((response) => response.json())
     .then((responseJson) => {
-      console.log("My response to user is ")
-      console.log(responseJson)
+      // console.log("My response to user is ")
+      // console.log(responseJson)
       if (responseJson['error'] != 'None'){
         Alert.alert("Faulty Username provided. Redirecting to Login.");
         this.homePage();
       }
       else{
         myData = responseJson['success']
-        console.log("My data is;");
-        console.log(myData);
+        // console.log("My data is;");
+        // console.log(myData);
         if (myData['Houses'].length == 0){
           this.navigate('createHouse', myData['Username']);
         }
         else{
           // console.log(this.props)
-          console.log("getting housemates")
+          // console.log("getting housemates")
           var name = this.props.name;
-          console.log("My house name is ");
-          console.log(myData['Houses'][0]);
+          //console.log("My house name is ");
+          //console.log(myData['Houses'][0]);
           var url = BASEURL + 'house/' + myData['Houses'][0];
-          console.log("Pinging url: " + url);
+          //console.log("Pinging url: " + url);
             return fetch(url)
               .then((response) => response.json())
               .then((responseJson) => {
-                console.log("My house is ");
-                console.log(responseJson);
-                console.log('got response');
+                // console.log("My house is ");
+                // console.log(responseJson);
+                // console.log('got response');
                 if (responseJson['error'] != 'None'){
                   Alert.alert(responseJson['error']);
                 }
                 else{
                   this.setState({myHouse: responseJson, users: responseJson['successUsers']});
-                  console.log("The state.users is ");
-                  console.log(this.state.users);
+                  // console.log("The state.users is ");
+                  // console.log(this.state.users);
                 }
               })
               .catch((error) => {
@@ -129,16 +129,16 @@ getHousemates() {
 
   LogOut(){
     var url = BASEURL + 'logout/' + this.props['name'];
-    console.log("Pinging url: " + url);
+   // console.log("Pinging url: " + url);
     return fetch(url)
       .then((response) => response.json())
       .then((responseJson) => {
-        console.log("At least went into the response");
+       // console.log("At least went into the response");
         if (responseJson['error'] != 'None'){
           Alert.alert(responseJson['error']);
         }
         else{
-          console.log("Logged Out successfully");
+          //console.log("Logged Out successfully");
           this.props.navigator.pop()
         }
       })
@@ -149,7 +149,7 @@ getHousemates() {
 
   render() {
     // console.log(this.state.users);
-    console.log(this.props)
+   // console.log(this.props)
     const editMode = this.state.editMode;
 
     let choreList = null;
@@ -159,7 +159,7 @@ getHousemates() {
                     <FlatList style={styles.choreList}
                       keyExtractor={(item, index) => index}
                       data={this.state.users}
-                      renderItem={({item}) => <Chore house={this.state.myHouse} housemate={item["First Name"]} username={item["Username"]} title={item["myChore"]} edit={this.state.editMode} reload={this.getHousemates} navigator={this.props.navigator}></Chore>}
+                      renderItem={({item}) => <Chore house={this.state.myHouse} housemate={item["First Name"]} username={item["Username"]} title={item["myChore"]} needToDo={item["Do Chore"]} edit={this.state.editMode} reload={this.getHousemates} navigator={this.props.navigator}></Chore>}
                     ></FlatList>
     } else if (this.state.myHouse != null){
 
@@ -168,7 +168,7 @@ getHousemates() {
                     <FlatList
                       keyExtractor={(item, index) => index}
                       data={this.state.users}
-                      renderItem={({item}) => <Chore house={this.state.myHouse} housemate={item["First Name"]} username={item["Username"]} title={item["myChore"]} edit={this.state.editMode} reload={this.getHousemates} navigator={this.props.navigator}
+                      renderItem={({item}) => <Chore house={this.state.myHouse} housemate={item["First Name"]} username={item["Username"]} title={item["myChore"]} needToDo={item["Do Chore"]} edit={this.state.editMode} reload={this.getHousemates} navigator={this.props.navigator}
                       ></Chore>}
                     ></FlatList>
 ;
@@ -179,8 +179,8 @@ getHousemates() {
 
     var editButtonText = editMode ? "Done" : "Edit";
 
-    console.log("this.state.users before render is ");
-    console.log(this.state.users);
+    // console.log("this.state.users before render is ");
+    // console.log(this.state.users);
     if(this.state.users.length == 0){
       return(<View><Text> Loading... </Text></View>);
     }

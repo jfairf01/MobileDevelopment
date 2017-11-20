@@ -56,14 +56,14 @@ class CreateHouse extends Component {
             'passcode': this.state.passcode,
     }));
 
-    console.log("Pinging url: " + url);
+    //console.log("Pinging url: " + url);
     return fetch(url, {
         method: 'POST',
         body: data_
       }) 
       .then((response) => response.json())
       .then((responseJson) => {
-        console.log("error is " + responseJson['error']);
+        //console.log("error is " + responseJson['error']);
         if (responseJson['error'] != 'None'){
           Alert.alert(responseJson['error']);
         }
@@ -76,8 +76,8 @@ class CreateHouse extends Component {
       });
   }
   createHouse(){
-    console.log("Going to create a house");
-    console.log("Name should be " + this.props.name);
+    // console.log("Going to create a house");
+    // console.log("Name should be " + this.props.name);
     // console.log("starting crash");
 //     Crashlytics.setUserName('megaman');
 
@@ -92,7 +92,7 @@ class CreateHouse extends Component {
 // // Forces a native crash for testing
 // Crashlytics.crash();
 
-    console.log("House name is " + this.state.houseName);
+    //console.log("House name is " + this.state.houseName);
     var url = BASEURL + 'new_house/';
     var data_ = new FormData();
     data_.append('json', JSON.stringify({
@@ -101,14 +101,14 @@ class CreateHouse extends Component {
             'passcode': this.state.passcode,
     }));
 
-    console.log("Pinging url: " + url);
+    //console.log("Pinging url: " + url);
     return fetch(url, {
         method: 'POST',
         body: data_
       }) 
       .then((response) => response.json())
       .then((responseJson) => {
-        console.log("error is " + responseJson['error']);
+        //console.log("error is " + responseJson['error']);
         if (responseJson['error'] != 'None'){
           Alert.alert(responseJson['error']);
         }
@@ -121,8 +121,8 @@ class CreateHouse extends Component {
       });
   }
   render() {
-    console.log("CreateHouse render");
-    console.log(this.props)
+    // console.log("CreateHouse render");
+    // console.log(this.props)
     return(
       <View>
         <Text style={styles.heading}> Either Join an Existing House </Text>
