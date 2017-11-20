@@ -76,7 +76,7 @@ class Home extends Component {
   componentDidMount() {
     this.unsubscribe = firebase.auth().onAuthStateChanged((user) => {
       if(user){
-        console.log('signed in', user);
+        //console.log('signed in', user);
          this.setState(previousState => {
                 return { user: user,
                   email: user.email};
@@ -96,7 +96,7 @@ class Home extends Component {
   }
 
   addNew(user){
-    console.log(user);
+    //console.log(user);
     var data_ = new FormData();
     data_.append('json', JSON.stringify({
             'new_username': this.state.username,
@@ -106,14 +106,14 @@ class Home extends Component {
     }));
 
     var url = BASEURL + 'new_user';
-    console.log("Pinging url: " + url);
+    //console.log("Pinging url: " + url);
     return fetch(url, {
       method: 'POST',
       body: data_
       }) 
       .then((response) => response.json())
       .then((responseJson) => {
-        console.log("error is " + responseJson['error']);
+        //console.log("error is " + responseJson['error']);
         if (responseJson['error'] != 'None'){
           Alert.alert(responseJson['error']);
         }
@@ -144,16 +144,16 @@ class Home extends Component {
     }));
 
     var url = BASEURL + 'login';
-    console.log("Pinging url: " + url);
+    //console.log("Pinging url: " + url);
     return fetch(url, {
       method: 'POST',
       body: data_
       }) 
       .then((response) => response.json())
       .then((responseJson) => {
-        console.log("In responseJson");
-        console.log(responseJson);
-        console.log("error is " + responseJson['error']);
+        // console.log("In responseJson");
+        // console.log(responseJson);
+        // console.log("error is " + responseJson['error']);
         if (responseJson['error'] != 'None'){
           Alert.alert(responseJson['error']);
         }
@@ -171,13 +171,13 @@ class Home extends Component {
        this.setState(previousState => {
         return { user: null};
       });
-      console.log('User signed out successfully');
+      //console.log('User signed out successfully');
     })
     .catch();
   }
 
   setNew(){
-    console.log(this.state)
+   // console.log(this.state)
     if(this.state.new_user == false){
        this.setState(previousState => {
                 return { new_user: true}});
@@ -234,7 +234,7 @@ class Home extends Component {
          <View style={styles.header}>
 
           <Text style={{marginLeft: 20, marginRight: 20, fontSize: 30, fontFamily: 'courier'}}>
-            HouseMom
+            House
           </Text>
         </View>
         <View style={styles.logIn}>

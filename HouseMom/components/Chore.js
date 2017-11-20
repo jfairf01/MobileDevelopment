@@ -27,7 +27,7 @@ class Chore extends Component {
     super(props);
     this.state = {
       title: this.props.title,
-      checked: false,
+      checked: !this.props.needToDo,
       modalVisible: false,
       chores: [],
       selectedChore: this.props.title,
@@ -39,44 +39,26 @@ class Chore extends Component {
   }
 
   componentWillMount(){
-    console.log("getting chores from componentWillMount");
+    // console.log("getting chores from componentWillMount");
     this.getChores();
-    console.log("chores are");
-    console.log(this.state.chores);
+    // console.log("chores are");
+    // console.log(this.state.chores);
   }
 
 
 
   getChores() {
-    console.log('GETTING CHORES')
-    console.log(this.props.house)
+    // console.log('GETTING CHORES')
+    // console.log(this.props.house)
     this.setState({chores: this.props.house['houseChores'], isLoading: false, firstLoad:true, choreList:[]})
-    // console.log("in getChores");
-    // var url = BASEURL + 'chores';
-    // console.log("Pinging url: " + url);
-    // return fetch(url)
-    //   .then((response) => response.json())
-    //   .then((responseJson) => {
-    //     console.log("Response from getChores");
-    //     console.log(responseJson);
-    //     if (responseJson['error'] != 'None'){
-    //       Alert.alert(responseJson['error']);
-    //     }
-    //     else{
-    //       this.setState({chores: responseJson['success'], isLoading: false});
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.error(error);
-    //   });
   }
 
   setChore() {
-    console.log("in setChore");
+ //   console.log("in setChore");
     this.setState({title: this.state.selectedChore});
-    console.log(this.props);
+   // console.log(this.props);
     var url = BASEURL + 'new_user_chore/' + this.state.selectedChore + "/" + this.props.username;
-    console.log("Pinging url: " + url);
+    //console.log("Pinging url: " + url);
     return fetch(url)
       .then((response) => response.json())
       .then((responseJson) => {
@@ -93,9 +75,9 @@ class Chore extends Component {
   }
 
   addChore(input) {
-    console.log("in addChore");
+   // console.log("in addChore");
     var url = BASEURL + 'new_chore/' + input + '/' + this.props.username;
-    console.log("Pinging url: " + url);
+   // console.log("Pinging url: " + url);
     return fetch(url)
       .then((response) => response.json())
       .then((responseJson) => {
@@ -115,18 +97,19 @@ class Chore extends Component {
 
 //is there a way to test this? (yes once you can nudge)
   choreCompleted(checked) {
-    console.log("Is it checked?");
-    console.log(this.state.checked);
+    // console.log("Is it checked?");
+    // console.log(this.state.checked);
+    // console.log(checked);
 
     // This function will ping the API to say the person's chore is done
-    if(this.state.checked){
+    if(!this.state.checked){
       var url = BASEURL + 'chore_done/' + this.state.title + "/" + this.props.username;
-      console.log("Pinging url: " + url);
+     // console.log("Pinging url: " + url);
       fetch(url)
         .then((response) => response.json())
         .then((responseJson) => {
-          console.log("My response for chore done is ");
-          console.log(responseJson);
+         // console.log("My response for chore done is ");
+          //console.log(responseJson);
           if (responseJson['error'] != 'None'){
           Alert.alert(responseJson['error']);
           }
@@ -141,34 +124,34 @@ class Chore extends Component {
     // This function will ping the API to tell the person to do their chore
     else{
       var url = BASEURL + 'do_your_chore/' + this.state.title + "/" + this.props.username;
-      console.log("Pinging url: " + url);
+      //console.log("Pinging url: " + url);
       fetch(url)
         .then((response) => response.json())
         .then((responseJson) => {
-          console.log("My response for chore done is ");
-          console.log(responseJson);
+         // console.log("My response for chore done is ");
+          //console.log(responseJson);
           if (responseJson['error'] != 'None'){
-          Alert.alert(responseJson['error']);
+            Alert.alert(responseJson['error']);
           }
           else{
             // TODO: Need to send a notification to the user who needs to do their chore
-            Alert.alert("We need to send a notification to this user");
+            //Alert.alert("We will let them know to do their chore again");
           }
         })
         .catch((error) => {
           console.error(error);
         });
     }
-    this.setState({checked: checked});
+    this.setState({checked: !this.state.checked});
     return this.state.checked;
   }
 
   nudge() {
-    console.log(this.state);
-    console.log(this.props);
+    // console.log(this.state);
+    // console.log(this.props);
     this.setState({checked:true});
     var url = BASEURL + 'nudge/' + this.state.title +"/" + this.props.username;
-    console.log("Pinging url: " + url);
+   // console.log("Pinging url: " + url);
     return fetch(url)
       .then((response) => response.json())
       .then((responseJson) => {
@@ -186,17 +169,23 @@ class Chore extends Component {
 
   render() {
     if (this.state.isLoading){
-      console.log("It is loading...");
+      //console.log("It is loading...");
       return <View><Text>Loading...</Text></View>;
     }
     else{
-      console.log("What's in my state?");
-      console.log(this.state);
-      console.log("It is not loading anymore");
-      console.log("Our chores are");
-      console.log(this.state.chores);
-      console.log("What's in my props?");
-      console.log(this.props);
+      // console.log("What's in my state?");
+      // console.log(this.state);
+      // console.log("It is not loading anymore");
+      // console.log("Our chores are");
+      // console.log(this.state.chores);
+      // console.log("What's in my props?");
+      // console.log(this.props);
+      // var done = this.state.checked;
+      // this.props.house.successUsers.map( user => 
+      //   {if (user['Username'] == this.props.username)
+      //     {if(user['Do Chore'] == false)
+      //         done = true}} )
+      // console.log(done)
       // this.getChores();
       // console.log("chores2 are");
       // console.log(this.state.chores);
@@ -218,8 +207,8 @@ class Chore extends Component {
         }
         this.setState({firstLoad: false});
       }
-      console.log("My chore list is ");
-      console.log(this.state.choreList);
+      // console.log("My chore list is ");
+      // console.log(this.state.choreList);
       
       // If the person is not assigned a chore, don't let them be nudged or switched
       if (this.state.title == "None"){
