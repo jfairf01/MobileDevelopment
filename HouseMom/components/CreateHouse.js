@@ -55,7 +55,8 @@ class CreateHouse extends Component {
             'houseName': this.state.houseName,
             'passcode': this.state.passcode,
     }));
-
+    console.log(url)
+    console.log(data_)
     //console.log("Pinging url: " + url);
     return fetch(url, {
         method: 'POST',
