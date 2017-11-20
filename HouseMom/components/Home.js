@@ -24,6 +24,8 @@ import RNFirebase from 'react-native-firebase';
 import CreateHouse from './CreateHouse';
 // import NewUser from './newUser';
 
+var BASEURL = 'https://housemom-api.herokuapp.com/'//'https://8677390d.ngrok.io/';
+
 
 var Fabric = require('react-native-fabric');
 
@@ -40,9 +42,9 @@ class Home extends Component {
 
   constructor(props) {
     super(props);
-    this.onLoad = this.onLoad.bind(this);
-    this.onProgress = this.onProgress.bind(this);
-    this.onBuffer = this.onBuffer.bind(this);
+    // this.onLoad = this.onLoad.bind(this);
+    // this.onProgress = this.onProgress.bind(this);
+    // this.onBuffer = this.onBuffer.bind(this);
     this.navigate = this.navigate.bind(this);
     this.LogIn = this.LogIn.bind(this);
     this.LogOut = this.LogOut.bind(this);
@@ -54,43 +56,10 @@ class Home extends Component {
       username: "Username",
       password:"Password",
       showPword: false,
-      new_user: false, 
+      new_user: false,
       first: "First Name",
       last: "Last Name"
     }
-  }
-  state = {
-    rate: 1,
-    volume: 0,
-    muted: false,
-    resizeMode: 'cover',
-    duration: 0.0,
-    currentTime: 0.0,
-    controls: false,
-    paused: true,
-    skin: 'custom',
-    ignoreSilentSwitch: null,
-    isBuffering: false,
-  };
-
-  onLoad(data) {
-    console.log('On load fired!');
-    this.setState({duration: data.duration});
-  }
-
-  onProgress(data) {
-    this.setState({currentTime: data.currentTime});
-  }
-
-  onBuffer({ isBuffering }: { isBuffering: boolean }) {
-    this.setState({ isBuffering });
-  }
-
-  muteVolumeControl() {
-    this.setState({volume: 0});
-  }
-  unMuteVolumeControl() {
-    this.setState({volume: .15});
   }
 
   navigate(route, props){
@@ -107,7 +76,7 @@ class Home extends Component {
   componentDidMount() {
     this.unsubscribe = firebase.auth().onAuthStateChanged((user) => {
       if(user){
-        console.log('signed in', user);
+        //console.log('signed in', user);
          this.setState(previousState => {
                 return { user: user,
                   email: user.email};
@@ -117,7 +86,7 @@ class Home extends Component {
       }
 
       else
-        console.log('not')
+        console.log('user not recognized');
     });    
 }
   componentWillUnmount() {
@@ -127,7 +96,7 @@ class Home extends Component {
   }
 
   addNew(user){
-    console.log(user);
+    //console.log(user);
     var data_ = new FormData();
     data_.append('json', JSON.stringify({
             'new_username': this.state.username,
@@ -136,36 +105,26 @@ class Home extends Component {
             'lastName': this.state.last
     }));
 
-    return fetch('https://housemom-api.herokuapp.com/new_user', {
+    var url = BASEURL + 'new_user';
+    //console.log("Pinging url: " + url);
+    return fetch(url, {
       method: 'POST',
       body: data_
       }) 
-      .then((response) => {console.log(response);})
-      .then(() => {
+      .then((response) => response.json())
+      .then((responseJson) => {
+        //console.log("error is " + responseJson['error']);
+        if (responseJson['error'] != 'None'){
+          Alert.alert(responseJson['error']);
+        }
+        else{
           this.navigate('createHouse', this.state.username);
-        // this.props.navigator.push({
-        //   name: 'createHouse',
-        //   passProps: {
-        //     name:this.state.username
-        //   }
-        //})
-        //  this.navigate('createHouse', { username:this.state.username });
+        }
       })
       .catch((error) => {
         console.error(error);
       });
   }
-
-  // SignUp(){
-  //   firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
-  //     .then((user) => {
-  //       console.log('user created', user)
-  //       this.addNew(user);
-  //     })
-  //     .catch((err) => {
-  //       Alert.alert("Sorry, your username or password is wrong.")
-  //     });
-  // }
 
     // a block of code to cause a crash for crashlytics testing
     // console.log("starting crash");
@@ -177,14 +136,30 @@ class Home extends Component {
     // // Forces a native crash for testing
     // Crashlytics.crash();
   LogIn(){
-    var url = 'https://housemom-api.herokuapp.com/login/' + 
-     this.state.username + '/' + this.state.password
-    console.log("url:" + url);
-    return fetch(url)
-      .then((response) => {console.log(response);})
-      .then(() => {
-        this.navigate('dashboard', this.state.username);
-          
+
+    var data_ = new FormData();
+    data_.append('json', JSON.stringify({
+            'curr_username': this.state.username,
+            'curr_password': this.state.password
+    }));
+
+    var url = BASEURL + 'login';
+    //console.log("Pinging url: " + url);
+    return fetch(url, {
+      method: 'POST',
+      body: data_
+      }) 
+      .then((response) => response.json())
+      .then((responseJson) => {
+        // console.log("In responseJson");
+        // console.log(responseJson);
+        // console.log("error is " + responseJson['error']);
+        if (responseJson['error'] != 'None'){
+          Alert.alert(responseJson['error']);
+        }
+        else{
+          this.navigate('dashboard', this.state.username);
+        }
       })
       .catch((error) => {
         console.error(error);
@@ -196,13 +171,13 @@ class Home extends Component {
        this.setState(previousState => {
         return { user: null};
       });
-      console.log('User signed out successfully');
+      //console.log('User signed out successfully');
     })
     .catch();
   }
 
   setNew(){
-    console.log(this.state)
+   // console.log(this.state)
     if(this.state.new_user == false){
        this.setState(previousState => {
                 return { new_user: true}});
@@ -213,7 +188,7 @@ class Home extends Component {
   render() {
     newUser = null;
     if(this.state.new_user){
-      console.log("SHOW NEW INF")
+      // console.log("SHOW NEW INF")
       newUser = <View>
       <TextInput
           style={{height: 40, width: 200,borderColor: 'gray', borderWidth: 1, margin:10}}
@@ -259,7 +234,7 @@ class Home extends Component {
          <View style={styles.header}>
 
           <Text style={{marginLeft: 20, marginRight: 20, fontSize: 30, fontFamily: 'courier'}}>
-            HouseMom
+            House
           </Text>
         </View>
         <View style={styles.logIn}>
@@ -272,6 +247,7 @@ class Home extends Component {
         <TextInput   style={{height: 40, width: 200,borderColor: 'gray', borderWidth: 1, margin:10}}
           onChangeText={(password) => this.setState({password})}
           value={this.state.password}
+          secureTextEntry = {true}
         />
           {loginButton}
           <TouchableOpacity style={styles.authButtons} onPress={this.setNew}>

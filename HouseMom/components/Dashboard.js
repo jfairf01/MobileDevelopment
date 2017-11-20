@@ -11,11 +11,15 @@ import {
   View,
   TouchableOpacity,
   CheckBox,
-  FlatList
+  FlatList,
+  Alert,
+  ScrollView
 } from 'react-native';
 
 import Chore from './Chore.js';
-import ChoreList from './ChoreList.js';
+// import ChoreList from './ChoreList.js';
+
+var BASEURL = 'https://housemom-api.herokuapp.com/'//'https://8677390d.ngrok.io/';
 
 
 
@@ -23,10 +27,12 @@ class Dashboard extends Component {
   constructor(props){
     super(props);
     this.navigate = this.navigate.bind(this);
+    this.homePage = this.homePage.bind(this);
     this.state = {
       editMode: false,
       users: [],
-      modalVisible: false
+      modalVisible: false,
+      myHouse: null
     };
     //this.getUsersChores();
     this.getHousemates = this.getHousemates.bind(this);
@@ -37,42 +43,80 @@ class Dashboard extends Component {
     this.getHousemates();
   }
 
-  navigate(route){
+  navigate(route, props){
     this.props.navigator.push({
-      name: route
+      name: route,
+      passProps: {
+        name: props
+      }
     })
   }
-
-getUsersChores() {
-    return fetch('https://housemom-api.herokuapp.com/users')
-      .then((response) => response.json())
-      .then((responseJson) => {
-        this.setState({users: responseJson})})
-      .catch((error) => {
-        console.error(error);
-      });
+  homePage(){
+    this.props.navigator.pop()
   }
 
+// getUsersChores() {
+//     return fetch('https://housemom-api.herokuapp.com/users')
+//       .then((response) => response.json())
+//       .then((responseJson) => {
+//         this.setState({users: responseJson})})
+//       .catch((error) => {
+//         console.error(error);
+//       });
+//   }
+
 getHousemates() {
-  console.log(this.props)
-  console.log("getting housemates")
-  var name = this.props.name;
-    return fetch('https://housemom-api.herokuapp.com/users')
-      .then((response) => response.json())
-      .then((responseJson) => {
-        console.log(responseJson)
-
-        var currUser = responseJson.filter(function(user){
-          return (user["Username"] == name); //change this to be dynamic
-        });
-        var house = currUser[0]["Houses"][0];
-
-        var housemates = responseJson.filter(function(user){
-          return (user["Houses"][0] == house); //change this to be dynamic
-        });
-        //var housemates = myhouse[0]["Inhabitants"];
-        console.log('got response')
-        this.setState({users: housemates});
+ // console.log("getHousemates function");
+  var myUsername = this.props['name'];
+  var myData;
+  // console.log("My username is " + myUsername);
+  // console.log("First let's find my house");
+  var url = BASEURL + 'user/' + myUsername;
+  this.setState({myHouse: null, users: []});
+  fetch(url)
+    .then((response) => response.json())
+    .then((responseJson) => {
+      // console.log("My response to user is ")
+      // console.log(responseJson)
+      if (responseJson['error'] != 'None'){
+        Alert.alert("Faulty Username provided. Redirecting to Login.");
+        this.homePage();
+      }
+      else{
+        myData = responseJson['success']
+        // console.log("My data is;");
+        // console.log(myData);
+        if (myData['Houses'].length == 0){
+          this.navigate('createHouse', myData['Username']);
+        }
+        else{
+          // console.log(this.props)
+          // console.log("getting housemates")
+          var name = this.props.name;
+          //console.log("My house name is ");
+          //console.log(myData['Houses'][0]);
+          var url = BASEURL + 'house/' + myData['Houses'][0];
+          //console.log("Pinging url: " + url);
+            return fetch(url)
+              .then((response) => response.json())
+              .then((responseJson) => {
+                // console.log("My house is ");
+                // console.log(responseJson);
+                // console.log('got response');
+                if (responseJson['error'] != 'None'){
+                  Alert.alert(responseJson['error']);
+                }
+                else{
+                  this.setState({myHouse: responseJson, users: responseJson['successUsers']});
+                  // console.log("The state.users is ");
+                  // console.log(this.state.users);
+                }
+              })
+              .catch((error) => {
+                console.error(error);
+              });
+          }
+        }
       })
       .catch((error) => {
         console.error(error);
@@ -80,79 +124,94 @@ getHousemates() {
   }
 
   toggleEdit(editing) {
-
-    
     this.setState({editMode: !editing});
   }
 
-  // .filter(function(user){
-  //         return (user["Chores"].length > 0);
-  //       })
+  LogOut(){
+    var url = BASEURL + 'logout/' + this.props['name'];
+   // console.log("Pinging url: " + url);
+    return fetch(url)
+      .then((response) => response.json())
+      .then((responseJson) => {
+       // console.log("At least went into the response");
+        if (responseJson['error'] != 'None'){
+          Alert.alert(responseJson['error']);
+        }
+        else{
+          //console.log("Logged Out successfully");
+          this.props.navigator.pop()
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
 
   render() {
     // console.log(this.state.users);
-    console.log(this.props)
+   // console.log(this.props)
     const editMode = this.state.editMode;
 
     let choreList = null;
     
     if (editMode) {
-      choreList = <View>
+      choreList = 
                     <FlatList style={styles.choreList}
                       keyExtractor={(item, index) => index}
                       data={this.state.users}
-                      renderItem={({item}) => <Chore housemate={item["First Name"]} username={item["Username"]} title={item["Chores"][0]} deadline="Thursday" edit={this.state.editMode} reload={this.getHousemates.bind(this)} navigator={this.props.navigator}></Chore>}
+                      renderItem={({item}) => <Chore house={this.state.myHouse} housemate={item["First Name"]} username={item["Username"]} title={item["myChore"]} needToDo={item["Do Chore"]} edit={this.state.editMode} reload={this.getHousemates} navigator={this.props.navigator}></Chore>}
                     ></FlatList>
-                  </View>;
-    } else {
+    } else if (this.state.myHouse != null){
 
-      const usersWithChores = this.state.users.filter(function(user){
-          return (user["Chores"].length > 0);
-        });
+      choreList =
 
-      choreList = <View>
                     <FlatList
                       keyExtractor={(item, index) => index}
                       data={this.state.users}
-                      renderItem={({item}) => <Chore housemate={item["First Name"]} username={item["Username"]} title={item["Chores"][0]} deadline="Thursday" edit={this.state.editMode} reload={this.getHousemates.bind(this)} navigator={this.props.navigator}
+                      renderItem={({item}) => <Chore house={this.state.myHouse} housemate={item["First Name"]} username={item["Username"]} title={item["myChore"]} needToDo={item["Do Chore"]} edit={this.state.editMode} reload={this.getHousemates} navigator={this.props.navigator}
                       ></Chore>}
                     ></FlatList>
-                  </View>;
+;
+    }
+    else{
+      return(<View><Text> Loading... </Text></View>);
     }
 
     var editButtonText = editMode ? "Done" : "Edit";
 
+    // console.log("this.state.users before render is ");
+    // console.log(this.state.users);
     if(this.state.users.length == 0){
       return(<View><Text> Loading... </Text></View>);
     }
     else{
     return(
-      <View style={styles.container}>
-
-        <Text style={styles.headerText}>Chore Chart</Text>
-        <View>
-          {choreList}
+        <View style={styles.container}>
+          <Text style={styles.headerText}>{this.state.myHouse['successName']}</Text>
+          <Text style={styles.subHeaderText}>Chore Chart</Text>
+          <View style={styles.scroll}>
+            {choreList}
+          </View>
+          <View style={styles.controls}>
+              <View style={styles.resizeModeControl}>
+              <TouchableOpacity onPress={()=>{this.toggleEdit(editMode)}} style={styles.button}>
+                  <Text style={styles.buttonText}>
+                    {editButtonText}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={()=>{this.getHousemates()}} style={styles.button}>
+                  <Text style={styles.buttonText}>
+                    Refresh
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={()=>{this.LogOut()}} style={styles.button}>
+                  <Text style={styles.buttonText}>
+                    Log Out
+                  </Text>
+                </TouchableOpacity>
+              </View>
+          </View>
         </View>
-        <View style={styles.controls}>
-            <View style={styles.resizeModeControl}>
-            <TouchableOpacity onPress={()=>{this.toggleEdit(editMode)}} style={styles.button}>
-                <Text style={styles.buttonText}>
-                  {editButtonText}
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={()=>{this.getHousemates()}} style={styles.button}>
-                <Text style={styles.buttonText}>
-                  Refresh
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={()=>{this.props.navigator.pop()}} style={styles.button}>
-                <Text style={styles.buttonText}>
-                  Go Back
-                </Text>
-              </TouchableOpacity>
-            </View>
-        </View>
-      </View>
       );
     }
   }
@@ -164,17 +223,28 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'flex-start',
     alignItems: 'center',
+    alignContent: 'space-between',
     backgroundColor: 'white',
   },
+  scroll: {
+    marginBottom:90,
+    top:20,
+    flex:1,
+  },
   choreList: {
-    paddingBottom: 50,
-    height: 480,
-    flexGrow: 0
+    //paddingBottom: 50,
+    //height: 480,
+    //flexGrow: 0
   },
   headerText: {
     fontSize: 40,
     color: 'black',
     marginTop: 20
+  },
+  subHeaderText: {
+    fontSize: 32,
+    color: 'black',
+    marginTop: 0
   },
   button: {
     marginRight:20,
@@ -184,7 +254,7 @@ const styles = StyleSheet.create({
     backgroundColor:'#68a0cf',
     borderRadius:10,
     borderWidth: 1,
-    borderColor: '#fff'
+    borderColor: '#fff',
   },
   buttonText: {
     marginLeft: 20, 
@@ -195,9 +265,10 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     borderRadius: 5,
     position: 'absolute',
-    bottom: 44,
+    bottom: 20,
     left: 4,
     right: 4,
+    marginTop:20
   },
   resizeModeControl: {
     flex: 1,

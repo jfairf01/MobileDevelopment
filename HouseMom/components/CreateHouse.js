@@ -4,7 +4,6 @@ import React, {
 
 import {
   AlertIOS, //unneeded?
-  Alert,
   AppRegistry,
   Button,
   Platform,
@@ -18,14 +17,19 @@ import {
   Picker,
   TextInput,
   Switch, //change to checkbox if you can update react-native to .49
+  Alert
 } from 'react-native';
+
+var BASEURL = 'https://housemom-api.herokuapp.com/'//'https://8677390d.ngrok.io/';
+
 
 //need to update this to get 'checked' value from db
 class CreateHouse extends Component {
   constructor(props){
     super(props);
     this.state = {
-      houseName:""
+      houseName:"", 
+      passcode:""
     };
     this.navigate = this.navigate.bind(this);
     this.joinHouse = this.joinHouse.bind(this);
@@ -33,7 +37,6 @@ class CreateHouse extends Component {
   }
 
   navigate(route, props){
-    //this.state.volume = 0;
     this.props.navigator.push({
       name: route,
       passProps: {
@@ -44,56 +47,94 @@ class CreateHouse extends Component {
 
 
   joinHouse(){
-    console.log(this.props.name);
-    console.log(this.state.houseName)
-    var url = 'https://housemom-api.herokuapp.com/new_house_user/' + this.props.name + "/" + this.state.houseName;
-    console.log("url:" + url);
-    return fetch(url)
-      .then((response) => {console.log(response);})
-      .then(() => {
-         this.navigate('dashboard', this.props.name) 
+
+    var url = BASEURL + 'new_house_user/';  
+    var data_ = new FormData();
+    data_.append('json', JSON.stringify({
+            'username': this.props.name,
+            'houseName': this.state.houseName,
+            'passcode': this.state.passcode,
+    }));
+
+    //console.log("Pinging url: " + url);
+    return fetch(url, {
+        method: 'POST',
+        body: data_
+      }) 
+      .then((response) => response.json())
+      .then((responseJson) => {
+        //console.log("error is " + responseJson['error']);
+        if (responseJson['error'] != 'None'){
+          Alert.alert(responseJson['error']);
+        }
+        else{
+          this.navigate('dashboard', this.props.name);
+        }
       })
       .catch((error) => {
         console.error(error);
       });
   }
   createHouse(){
-    console.log("starting crash");
-    Crashlytics.setUserName('megaman');
+    // console.log("Going to create a house");
+    // console.log("Name should be " + this.props.name);
+    // console.log("starting crash");
+//     Crashlytics.setUserName('megaman');
 
-Crashlytics.setUserEmail('user@email.com');
+// Crashlytics.setUserEmail('user@email.com');
 
-Crashlytics.setUserIdentifier('1234');
+// Crashlytics.setUserIdentifier('1234');
 
-Crashlytics.setBool('has_posted', true);
+// Crashlytics.setBool('has_posted', true);
 
-Crashlytics.setString('organization', 'Acme. Corp');
+// Crashlytics.setString('organization', 'Acme. Corp');
 
-// Forces a native crash for testing
-Crashlytics.crash();
+// // Forces a native crash for testing
+// Crashlytics.crash();
 
-    console.log(this.state.houseName);
-    var url = 'https://housemom-api.herokuapp.com/new_house/'  + this.state.houseName + "/" + this.props.name;
-    console.log("url:" + url);
-    return fetch(url)
-      .then((response) => {console.log(response);})
-      .then(() => {
-          this.navigate('dashboard', this.props.name) 
+    //console.log("House name is " + this.state.houseName);
+    var url = BASEURL + 'new_house/';
+    var data_ = new FormData();
+    data_.append('json', JSON.stringify({
+            'username': this.props.name,
+            'houseName': this.state.houseName,
+            'passcode': this.state.passcode,
+    }));
+
+    //console.log("Pinging url: " + url);
+    return fetch(url, {
+        method: 'POST',
+        body: data_
+      }) 
+      .then((response) => response.json())
+      .then((responseJson) => {
+        //console.log("error is " + responseJson['error']);
+        if (responseJson['error'] != 'None'){
+          Alert.alert(responseJson['error']);
+        }
+        else{
+          this.navigate('dashboard', this.props.name);
+        }
       })
       .catch((error) => {
         console.error(error);
       });
   }
   render() {
-    console.log(this.props)
+    // console.log("CreateHouse render");
+    // console.log(this.props)
     return(
       <View>
-
-        <TextInput onChangeText={(houseName) => this.setState({houseName})}> Enter House Name to Join </TextInput>
-        <Button title="Join House" onPress={this.joinHouse}>  </Button>
-        <TextInput onChangeText={(houseName) => this.setState({houseName})}> Enter New House Name </TextInput>
-        <Button title="Create House" onPress={this.createHouse}>  </Button>
-    </View>
+        <Text style={styles.heading}> Either Join an Existing House </Text>
+          <TextInput placeholder = "Existing House Name" placeholderTextColor = "#808080" onChangeText={(houseName) => this.setState({houseName})}/>
+          <TextInput placeholder = "Passcode" placeholderTextColor = "#808080" onChangeText={(passcode) => this.setState({passcode})}/>
+          <Button title="Join House" onPress={this.joinHouse}>  </Button>
+        <Text style={styles.heading}> Or Create a New House </Text> 
+          <TextInput placeholder = "New House Name" placeholderTextColor = "#808080" onChangeText={(houseName) => this.setState({houseName})}/>
+          <TextInput placeholder = "Enter a Passcode for Your House" placeholderTextColor = "#808080" onChangeText={(passcode) => this.setState({passcode})}/>
+          <Text style={{textAlign: 'center', marginLeft:5, marginRight:5}}> Give this passcode to your housemates so they can join your house! </Text>
+          <Button title="Create House" onPress={this.createHouse}>  </Button>
+      </View>
     );
   }
 }
@@ -143,6 +184,11 @@ const styles = StyleSheet.create({
     marginRight: 20, 
     color: 'white'
   },
+  heading:{
+    textAlign: 'center',
+    fontSize: 20,
+    marginTop: 16
+  }
 });
 
 export default CreateHouse

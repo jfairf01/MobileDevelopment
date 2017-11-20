@@ -5,6 +5,7 @@ import android.app.Application;
 
 import com.facebook.react.ReactApplication;
 import com.smixx.fabric.FabricPackage;
+// import com.smixx.fabric.FabricPackage;
 
 import io.invertase.firebase.RNFirebasePackage;
 import com.facebook.react.ReactNativeHost;
@@ -34,6 +35,7 @@ public class MainApplication extends Application implements ReactApplication {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
             new FabricPackage(),
+            // new FabricPackage(),
           new RNFirebasePackage(), 
           new RNFirebaseAuthPackage()
       );
