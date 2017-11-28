@@ -217,7 +217,7 @@ class Chore extends Component {
                       Nudge
                     </Text>
                   </TouchableOpacity>;
-        switchButton = <CheckBox disabled={true}/>;
+        switchButton = <CheckBox disabled={true} onClick={Function()}/>;
       }
       // Otherwise let them be nudged and switched
       else{
