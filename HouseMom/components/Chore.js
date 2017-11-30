@@ -35,6 +35,7 @@ class Chore extends Component {
       choreList: [],
       firstLoad: true
     };
+    firstLoad: true;
     // this.getChores();
   }
 
@@ -50,7 +51,8 @@ class Chore extends Component {
   getChores() {
     // console.log('GETTING CHORES')
     // console.log(this.props.house)
-    this.setState({chores: this.props.house['houseChores'], isLoading: false, firstLoad:true, choreList:[]})
+    this.setState({chores: this.props.house['houseChores'], isLoading: false, choreList:[]})
+    this.firstLoad = true;
   }
 
   setChore() {
@@ -85,7 +87,7 @@ class Chore extends Component {
           Alert.alert(responseJson['error']);
         }
         else{
-          this.setState({firstLoad: true});
+          this.firstLoad = true;
           this.props.reload();
           this.getChores();
         }
@@ -173,25 +175,7 @@ class Chore extends Component {
       return <View><Text>Loading...</Text></View>;
     }
     else{
-      // console.log("What's in my state?");
-      // console.log(this.state);
-      // console.log("It is not loading anymore");
-      // console.log("Our chores are");
-      // console.log(this.state.chores);
-      // console.log("What's in my props?");
-      // console.log(this.props);
-      // var done = this.state.checked;
-      // this.props.house.successUsers.map( user => 
-      //   {if (user['Username'] == this.props.username)
-      //     {if(user['Do Chore'] == false)
-      //         done = true}} )
-      // console.log(done)
-      // this.getChores();
-      // console.log("chores2 are");
-      // console.log(this.state.chores);
-
-      // var myButtons;
-      if (this.state.firstLoad){
+      if (this.firstLoad){
         console.log('IN FIRST LOAD');
         // Push the person's current chore first
         for (var i=0; i < this.state.chores.length; i++){
@@ -205,7 +189,8 @@ class Chore extends Component {
             this.state.choreList.push( <Picker.Item label={this.state.chores[i]} value={this.state.chores[i]} key={i}/>);
           }
         }
-        this.setState({firstLoad: false});
+        this.firstLoad = true;
+        // this.setState({firstLoad: false});
       }
       // console.log("My chore list is ");
       // console.log(this.state.choreList);
@@ -256,7 +241,7 @@ class Chore extends Component {
                      mode="dialog"
                      prompt="Pick a chore"
                      selectedValue={this.props.selectedChore}
-                     onValueChange={(chore)=>{console.log("picked chore: " + chore); this.setState({choreList: [], isLoading: false, firstLoad: true, selectedChore: chore, title: chore})}}>
+                     onValueChange={(chore)=>{console.log("picked chore: " + chore); this.firstLoad= true; this.setState({choreList: [], isLoading: false, selectedChore: chore, title: chore})}}>
                      {this.state.choreList}
               </Picker>
               <TouchableOpacity onPress={() => {this.setChore(); this.setState({modalVisible: false});}} style={styles.button}>
