@@ -15,7 +15,7 @@ import {
   Alert
 } from 'react-native';
 
-import RNFirebase from 'react-native-firebase';
+// import RNFirebase from 'react-native-firebase';
 
 import CreateHouse from './CreateHouse';
 // import NewUser from './newUser';
@@ -31,7 +31,7 @@ const configurationOptions = {
   debug: true
 };
 
-const firebase = RNFirebase.initializeApp(configurationOptions);
+// const firebase = RNFirebase.initializeApp(configurationOptions);
 
 
 class Home extends Component {
@@ -68,22 +68,22 @@ class Home extends Component {
   }
 
 
-  componentDidMount() {
-    this.unsubscribe = firebase.auth().onAuthStateChanged((user) => {
-      if(user){
-        //console.log('signed in', user);
-         this.setState(previousState => {
-                return { user: user,
-                  email: user.email};
-              });
-        //this.navigate('dashboard')
+//   componentDidMount() {
+//     this.unsubscribe = firebase.auth().onAuthStateChanged((user) => {
+//       if(user){
+//         //console.log('signed in', user);
+//          this.setState(previousState => {
+//                 return { user: user,
+//                   email: user.email};
+//               });
+//         //this.navigate('dashboard')
        
-      }
+//       }
 
-      else
-        console.log('user not recognized');
-    });    
-}
+//       else
+//         console.log('user not recognized');
+//     });    
+// }
   componentWillUnmount() {
     if (this.unsubscribe) {
       this.unsubscribe();
