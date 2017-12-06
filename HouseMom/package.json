@@ -18,7 +18,7 @@
 		"react-native-firebase": "^2.2.3",
 		"react-native-icon": "^0.2.10",
 		"react-native-video": "^2.0.0",
-		"react-navigation": "^1.0.0-beta.19"
+		"react-navigation": "^1.0.0-beta.21"
 	},
 	"devDependencies": {
 		"babel-jest": "21.2.0",

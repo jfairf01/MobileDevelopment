@@ -34,6 +34,7 @@ class CreateHouse extends Component {
     this.navigate = this.navigate.bind(this);
     this.joinHouse = this.joinHouse.bind(this);
     this.createHouse = this.createHouse.bind(this);
+    console.log("In constructor for CreateHouse")
   }
 
   navigate(route, props){

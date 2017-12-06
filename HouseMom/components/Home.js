@@ -45,7 +45,7 @@ class Home extends Component {
     // this.onLoad = this.onLoad.bind(this);
     // this.onProgress = this.onProgress.bind(this);
     // this.onBuffer = this.onBuffer.bind(this);
-    this.navigate = this.navigate.bind(this);
+    //this.navigate = this.navigate.bind(this);
     this.LogIn = this.LogIn.bind(this);
     this.LogOut = this.LogOut.bind(this);
     this.setNew = this.setNew.bind(this);
@@ -60,17 +60,18 @@ class Home extends Component {
       first: "First Name",
       last: "Last Name"
     }
+    const {navigate} = this.props.navigation;
   }
 
-  navigate(route, props){
-    //this.state.volume = 0;
-    this.props.navigator.push({
-      name: route,
-      passProps: {
-        name: props
-      }
-    })
-  }
+  // navigate(route, props){
+  //   //this.state.volume = 0;
+  //   this.props.navigator.push({
+  //     name: route,
+  //     passProps: {
+  //       name: props
+  //     }
+  //   })
+  // }
 
 
   componentDidMount() {
@@ -120,7 +121,7 @@ class Home extends Component {
           Alert.alert(responseJson['error']);
         }
         else{
-          this.navigate('createHouse', this.state.username);
+          navigate('createHouse', {username:this.state.username});
         }
       })
       .catch((error) => {
@@ -161,7 +162,7 @@ class Home extends Component {
           Alert.alert(responseJson['error']);
         }
         else{
-          this.navigate('dashboard', this.state.username);
+          this.navigate('Dashboard', {username:this.state.username});
         }
       })
       .catch((error) => {
