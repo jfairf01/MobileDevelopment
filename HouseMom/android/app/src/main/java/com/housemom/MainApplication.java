@@ -7,7 +7,7 @@ import com.facebook.react.ReactApplication;
 import com.smixx.fabric.FabricPackage;
 // import com.smixx.fabric.FabricPackage;
 
-import io.invertase.firebase.RNFirebasePackage;
+// import io.invertase.firebase.RNFirebasePackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -15,9 +15,9 @@ import com.facebook.soloader.SoLoader;
 import io.fabric.sdk.android.Fabric;
 import com.crashlytics.android.Crashlytics;
 
-import io.invertase.firebase.RNFirebasePackage;
+// import io.invertase.firebase.RNFirebasePackage;
 
-import io.invertase.firebase.auth.RNFirebaseAuthPackage; // <-- Add this line
+// import io.invertase.firebase.auth.RNFirebaseAuthPackage; // <-- Add this line
 
 import java.util.Arrays;
 import java.util.List;
@@ -34,10 +34,10 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new FabricPackage(),
+            new FabricPackage()
             // new FabricPackage(),
-          new RNFirebasePackage(), 
-          new RNFirebaseAuthPackage()
+          // new RNFirebasePackage(), 
+          // new RNFirebaseAuthPackage()
       );
     }
 

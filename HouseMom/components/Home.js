@@ -15,11 +15,7 @@ import {
   Alert
 } from 'react-native';
 
-import { AccessToken, LoginManager } from 'react-native-fbsdk';
-
-import Video from 'react-native-video';
-
-import RNFirebase from 'react-native-firebase';
+// import RNFirebase from 'react-native-firebase';
 
 import CreateHouse from './CreateHouse';
 // import NewUser from './newUser';
@@ -35,7 +31,7 @@ const configurationOptions = {
   debug: true
 };
 
-const firebase = RNFirebase.initializeApp(configurationOptions);
+// const firebase = RNFirebase.initializeApp(configurationOptions);
 
 
 class Home extends Component {
@@ -47,7 +43,6 @@ class Home extends Component {
     // this.onBuffer = this.onBuffer.bind(this);
     //this.navigate = this.navigate.bind(this);
     this.LogIn = this.LogIn.bind(this);
-    this.LogOut = this.LogOut.bind(this);
     this.setNew = this.setNew.bind(this);
     this.addNew = this.addNew.bind(this);
     this.unsubscribe = null;
@@ -74,22 +69,22 @@ class Home extends Component {
   // }
 
 
-  componentDidMount() {
-    this.unsubscribe = firebase.auth().onAuthStateChanged((user) => {
-      if(user){
-        //console.log('signed in', user);
-         this.setState(previousState => {
-                return { user: user,
-                  email: user.email};
-              });
-        //this.navigate('dashboard')
+//   componentDidMount() {
+//     this.unsubscribe = firebase.auth().onAuthStateChanged((user) => {
+//       if(user){
+//         //console.log('signed in', user);
+//          this.setState(previousState => {
+//                 return { user: user,
+//                   email: user.email};
+//               });
+//         //this.navigate('dashboard')
        
-      }
+//       }
 
-      else
-        console.log('user not recognized');
-    });    
-}
+//       else
+//         console.log('user not recognized');
+//     });    
+// }
   componentWillUnmount() {
     if (this.unsubscribe) {
       this.unsubscribe();
@@ -148,7 +143,7 @@ class Home extends Component {
     }));
 
     var url = BASEURL + 'login';
-    //console.log("Pinging url: " + url);
+    console.log("Pinging url: " + url);
     return fetch(url, {
       method: 'POST',
       body: data_
@@ -162,22 +157,13 @@ class Home extends Component {
           Alert.alert(responseJson['error']);
         }
         else{
-          this.navigate('Dashboard', {username:this.state.username});
+          console.log('done');
+          //this.navigate('Dashboard', {username:this.state.username});
         }
       })
       .catch((error) => {
         console.error(error);
       });
-  }
-  LogOut(){
-     firebase.auth().signOut()
-    .then(() => {
-       this.setState(previousState => {
-        return { user: null};
-      });
-      //console.log('User signed out successfully');
-    })
-    .catch();
   }
 
   setNew(){
@@ -225,11 +211,6 @@ class Home extends Component {
 
           <View style={{height:200}}>
              <Text style={styles.loggedIn}> You are logged in as {this.state.email}</Text>
-            <TouchableOpacity style={styles.logOut} onPress={this.LogOut}>
-              <Text style={{marginLeft: 20, marginRight: 20, color: 'white'}}>
-                Log Out
-              </Text>
-            </TouchableOpacity>
           </View>
         </View>)
       }
