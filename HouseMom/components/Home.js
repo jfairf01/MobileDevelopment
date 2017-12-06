@@ -14,7 +14,8 @@ import {
   TextInput,
   Alert
 } from 'react-native';
-
+import { StackNavigator } from 'react-navigation'
+import RootNavigator from '../index.js'
 // import RNFirebase from 'react-native-firebase';
 
 import CreateHouse from './CreateHouse';
@@ -38,10 +39,12 @@ class Home extends Component {
 
   constructor(props) {
     super(props);
+    console.log(props.navigation)
     // this.onLoad = this.onLoad.bind(this);
     // this.onProgress = this.onProgress.bind(this);
     // this.onBuffer = this.onBuffer.bind(this);
     //this.navigate = this.navigate.bind(this);
+    this.navigate = props.navigation.navigate;
     this.LogIn = this.LogIn.bind(this);
     this.setNew = this.setNew.bind(this);
     this.addNew = this.addNew.bind(this);
@@ -55,7 +58,7 @@ class Home extends Component {
       first: "First Name",
       last: "Last Name"
     }
-    const {navigate} = this.props.navigation;
+    
   }
 
   // navigate(route, props){
@@ -116,7 +119,7 @@ class Home extends Component {
           Alert.alert(responseJson['error']);
         }
         else{
-          navigate('createHouse', {username:this.state.username});
+          this.navigate('CreateHouse', {username:this.state.username});
         }
       })
       .catch((error) => {
@@ -152,13 +155,13 @@ class Home extends Component {
       .then((responseJson) => {
         // console.log("In responseJson");
         // console.log(responseJson);
-        // console.log("error is " + responseJson['error']);
+        console.log("error is " + responseJson['error']);
         if (responseJson['error'] != 'None'){
           Alert.alert(responseJson['error']);
         }
         else{
           console.log('done');
-          //this.navigate('Dashboard', {username:this.state.username});
+          this.navigate('Dashboard', {username:this.state.username});
         }
       })
       .catch((error) => {

@@ -21,7 +21,7 @@ import {
 } from 'react-native';
 
 var BASEURL = 'https://housemom-api.herokuapp.com/'//'https://8677390d.ngrok.io/';
-
+import { StackNavigator } from 'react-navigation'
 
 //need to update this to get 'checked' value from db
 class CreateHouse extends Component {
@@ -31,29 +31,30 @@ class CreateHouse extends Component {
       houseName:"", 
       passcode:""
     };
-    this.navigate = this.navigate.bind(this);
+    //this.navigate = this.navigate.bind(this);
+    this.navigate = this.props.navigation.navigate
     this.joinHouse = this.joinHouse.bind(this);
     this.createHouse = this.createHouse.bind(this);
     console.log("In constructor for CreateHouse")
   }
 
-  navigate(route, props){
-    this.props.navigator.push({
-      name: route,
-      passProps: {
-        name: props
-      }
-    })
-  }
+  // navigate(route, props){
+  //   this.props.navigator.push({
+  //     name: route,
+  //     passProps: {
+  //       name: props
+  //     }
+  //   })
+  // }
 
 
   joinHouse(){
-
+      var myUsername = this.props.navigation.state.params.username;
     var url = BASEURL + 'new_house_user';  
     var data_ = new FormData();
     data_.append('json', JSON.stringify({
             'houseName': this.state.houseName,
-            'userName': this.props.name,
+            'userName': myUsername,
             'housePassword': this.state.passcode,
     }));
     console.log(url)
@@ -70,7 +71,7 @@ class CreateHouse extends Component {
           Alert.alert(responseJson['error']);
         }
         else{
-          this.navigate('dashboard', this.props.name);
+          this.navigate('Dashboard', {'username':myUsername});
         }
       })
       .catch((error) => {
@@ -93,13 +94,15 @@ class CreateHouse extends Component {
 
 // // Forces a native crash for testing
 // Crashlytics.crash();
-
+    console.log(this.props)
+    var myUsername = this.props.navigation.state.params.username;
+    console.log()
     console.log("House name is " + this.state.houseName);
     var url = BASEURL + 'new_house';
     var data_ = new FormData();
     data_.append('json', JSON.stringify({
             'houseName': this.state.houseName,
-            'userName': this.props.name,
+            'userName': myUsername,
             'housePassword': this.state.passcode,
     }));
 
@@ -115,7 +118,7 @@ class CreateHouse extends Component {
           Alert.alert(responseJson['error']);
         }
         else{
-          this.navigate('dashboard', this.props.name);
+          this.navigate('Dashboard', {'username':myUsername});
         }
       })
       .catch((error) => {
