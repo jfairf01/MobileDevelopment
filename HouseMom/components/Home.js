@@ -51,12 +51,12 @@ class Home extends Component {
     this.unsubscribe = null;
     this.state={
       user:null,
-      username: "Username",
-      password:"Password",
+      username: "",
+      password:"",
       showPword: false,
       new_user: false,
-      first: "First Name",
-      last: "Last Name"
+      first: "",
+      last: ""
     }
     
   }
@@ -186,12 +186,12 @@ class Home extends Component {
       <TextInput
           style={{height: 40, width: 200,borderColor: 'gray', borderWidth: 1, margin:10}}
           onChangeText={(first) => this.setState({first})}
-          value={this.state.first}
+          value={this.state.first} placeholder="First Name"
         />
         <TextInput
           style={{height: 40, width: 200,borderColor: 'gray', borderWidth: 1, margin:10}}
           onChangeText={(last) => this.setState({last})}
-          value={this.state.last}
+          value={this.state.last} placeholder="Last Name"
         />
         </View> }
       loginButton = this.state.new_user ?  
@@ -230,12 +230,12 @@ class Home extends Component {
         <TextInput
           style={{height: 40, width: 200,borderColor: 'gray', borderWidth: 1, margin:10}}
           onChangeText={(username) => this.setState({username})}
-          value={this.state.username}
+          value={this.state.username} placeholder="Username"
         />
         <TextInput   style={{height: 40, width: 200,borderColor: 'gray', borderWidth: 1, margin:10}}
           onChangeText={(password) => this.setState({password})}
           value={this.state.password}
-          secureTextEntry = {true}
+          secureTextEntry = {true} placeholder="Password"
         />
           {loginButton}
           <TouchableOpacity style={styles.authButtons} onPress={this.setNew}>
