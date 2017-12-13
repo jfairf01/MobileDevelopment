@@ -190,3 +190,58 @@ For future reference, the blog post shows several useful steps including how to 
 We created a test crash using crashlytics and confirmed that it’s properly installed.
 
 
+
+###Leg 7: App Update and Reflection 
+
+The majority of our time post-launch has been dedicated to an unfortunate bug where our app runs smoothly on our emulator, but after we package it into an apk file, it shows a blank screen after the login screen. At this point, we have not figured out why this bug is happening. Some steps we took to try to fix this problem: 
+Eliminated all the warnings that we had, mostly due to us mishandling the state in React Native. 
+Building the APK through Android Studio, in case the way we were generating it was creating the bug. 
+We removed several packages that were giving us warnings in our logs, which we accessed by running ‘adb logcat.’ 
+We removed Firebase, which was causing some versioning issues in the past. 
+We changed the navigation structure, removing a package we believed was causing errors and replacing it with the react-native navigation package. 
+
+Claudia’s Response: 
+1. What did you learn technically?
+While I had some experience with React, I definitely gained some new skills in React-Native. One of the big technical skills I gained (slowly) is how to build an app with compatible versioning for all packages. I also used to think that mobile was pretty similar to web development, but I have learned that in terms of testing, launching, and design, mobile is a very different field. 
+2. What did you learn professionally? Please note: this is not the same as the above question.
+I gained skills at working on a team, dividing up and merging code, and making sure that we all had a shared vision for the apps. We at points hit some roadblocks because we had differing ideas about what the roles of specific pages and buttons were. I think this helped me learn to frontload the development process with a lot of discussion, planning, and delegating so that each team member knows their responsibility and feels confident building a portion that can fit into the larger product. 
+3. What do you wish I could have done differently?
+As you started to mention in class, I think that it would have been helpful for this class to collaborate with others outside of our department. I have been in classes in the past that have collaborated between Child Development and Mechanical Engineering, and the products were actually used in the classroom. Many of my friends are in other majors, and expressed desire and needs for apps, and creative ideas that I had never thought of. 
+4. If you were to do this all over again, what would you do differently?
+I wish that we had started earlier. I think we made consistent progress throughout the semester, but we definitely had bigger goals that we are just unable to reach because of all of our other work and tough bugs. 
+5. If you could make one change to this Mobile Development course, what would it be and why?
+I think another helpful change would be to pair groups with similar apps together so that they can share resources and support. During the workdays in class, you could set aside like 15 minutes to review and share information. 
+
+Johnny’s Response:
+What did you learn technically?
+I learned a lot about React Native and the development process in it. I had never used React Native before, so it was exciting to be able to apply the knowledge of web apis that I already had to try and apply it to our mobile development.
+What did you learn professionally? Please note: this is not the same as the above question.
+Although I had had experience in developing web apis, this project gave me a lot of experience in determining the style of data returned. Working on a team of three, it was nice to have a separation of powers and then working together to make all of our separate pieces. It was nice because we were able to support each other when necessary so we all had knowledge on the many moving parts, but each of us had a specialty in one area.
+
+What do you wish I could have done differently?
+I think with the breadth of material to cover, you did a very good job (I assume this is towards Ming as an instructor(?)) I think perhaps organizing teams so that people with different capabilities could come together. Perhaps you could create a google poll that asks people to list their strengths and desired paths to learn, and then grouped teams like that. For example, matching someone who’s done web development with someone who’s taken OOP GUI.
+
+If you were to do this all over again, what would you do differently?
+If I were to do this all over, I think I would try to keep the scale of our project smaller and try to work on it in increments at a time so that we would have been able to detect issues earlier and address them instead of feeling the pressure to finish all of the features we had in mind.
+
+If you could make one change to this Mobile Development course, what would it be and why?
+I think I would set up the lightning talks so that in addition to the speaking portion, each team would create an independent module or code snippet and add it to their public Github so that if someone goes up to present and you find it very interesting, you would be able to go straight to their source code location and use it rather than trying to go and do all the learning to set it up on your own.
+
+
+
+
+
+Sara’s Response: 
+What did you learn technically?
+I got experience using React Native, which I had never used before. This also gave me some insight into React in general because I’ve only done minal work in React JS. This class also taught me about some basics of mobile development such as activities and intents, and the importance of responsive layouts that work well in both portrait and landscape mode.
+What did you learn professionally? Please note: this is not the same as the above question.
+Professionally, I learned about the importance of communication in group projects and developing with a small team. This experience taught me a lot about how to balance work among different developers to capitalize on individual strengths and to give each team member a chance to work in an area they want to learn more about. We also learned to step up and be mindful of everyone’s capacity, so that if one teammate had a lot of work for other classes, the other two could temporarily take on more of the workload for our project, knowing that it would be reciprocated. 
+What do you wish I could have done differently?
+I think having the opportunity to collaborate with outside classes could make for some very interesting apps and more learning opportunities about working with teams. We talked in class about some collab options, and I think it would be cool to do a joint project between mobile dev and Human-Computer Interaction. In that class they prototype a mobile app and do usability testing, but they don’t actually code anything. I think combining forces to create a mobile app could be really cool and representational of the process of working with the UX team as a developer.
+If you were to do this all over again, what would you do differently?
+If I could do this again I would cut our plans down to fewer features so we could focus on getting a polished MVP with an intentionally designed UI before trying to add more functionality. We underestimated how much effort it would take to implement some of our ideas. I think they were good ideas for user retention and usability, but they would have to come later. I also might consider doing the project in Android Studio. As you mentioned at the beginning of the semester, the drawback to React is that you simply don’t know what’s going on under the hood. This proved to be a minimal problem for most of the semester, but with the blank screen apk bug we’re encountering, it’s hard to know where to start because we don’t know exactly what’s going wrong. Crashlytics isn’t so helpful for us because it doesn’t officially support React Native, so I think there could be some benefits to using Android Studio.
+If you could make one change to this Mobile Development course, what would it be and why?
+I think it would be nice to have the mvp due a little earlier in the semester, with an emphasis on the fact that it can be minimal, so that there’s more time to improve on it in the second half of the semester
+
+
+
