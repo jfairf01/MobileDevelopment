@@ -243,5 +243,9 @@ If I could do this again I would cut our plans down to fewer features so we coul
 5. If you could make one change to this Mobile Development course, what would it be and why?
 I think it would be nice to have the mvp due a little earlier in the semester, with an emphasis on the fact that it can be minimal, so that there’s more time to improve on it in the second half of the semester
 
+#### About our update
 
+We discovered a significant bug in the first release of our app: partway through signing up to use our app, users encountered a blank screen when our app failed to transition to the “Create A House” activity. We spent a lot of time working to improve this issue (created an even bigger bug along the way) and finally were able to build a functional APK yesterday! We tried several things, including changing our navigation package, but what finally worked was upgrading our version of react native.
+
+One significant learning experience that came out of this was that we made use of the Google Play store’s Beta option. We got our friends to test out our app to prove that it worked out in the wild before we released it to the public. Without this bug I don’t think we would have recognized the full potential of that process, and now we know how to use the Beta testing feature in the future!
 
